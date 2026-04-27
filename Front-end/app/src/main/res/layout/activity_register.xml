@@ -1,0 +1,69 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_gradient">
+
+    <!-- Título -->
+    <TextView
+        android:id="@+id/title"
+        android:text="Create Your Account"
+        android:textColor="@android:color/white"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:layout_margin="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <!-- Card branco -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/title"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/bg_card"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <EditText
+            android:hint="Full Name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:hint="Phone or Gmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:hint="Confirm Password"
+            android:inputType="textPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!-- Botão -->
+        <Button
+            android:text="SIGN UP"
+            android:textColor="@android:color/white"
+            android:background="@drawable/bg_button"
+            android:layout_marginTop="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"/>
+
+        <!-- Voltar para login -->
+        <TextView
+            android:text="Already have account? Sign in"
+            android:textColor="#666"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
