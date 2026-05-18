@@ -1,81 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#101524">
+    android:background="@drawable/bg_gradient">
 
+    <!-- Título superior (Estilo Hello Sign in) -->
     <TextView
         android:id="@+id/txt_title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
         android:text="Dashboard Geral"
         android:textColor="#FFFFFF"
-        android:textSize="24sp"
+        android:textSize="28sp"
         android:textStyle="bold"
-        android:layout_margin="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/btn_theme"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
+    <!-- Botão de Tema (Consistente com gerenciar_user) -->
+    <ImageView
         android:id="@+id/btn_theme"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="24dp"
         android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Alternar Tema"
+        android:padding="4dp"
         android:src="@android:drawable/ic_menu_day"
-        android:layout_margin="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <TextView
-        android:id="@+id/txt_overall_score"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0%"
-        android:textColor="#FFFFFF"
-        android:textSize="32sp"
-        app:layout_constraintTop_toBottomOf="@id/txt_title"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin="16dp" />
-
-    <EditText
-        android:id="@+id/search_finished"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Search Finished"
-        android:textColorHint="#888888"
-        android:textColor="#FFFFFF"
-        app:layout_constraintTop_toBottomOf="@id/txt_overall_score"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/txt_title"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="8dp" />
+        app:layout_constraintTop_toTopOf="@+id/txt_title"
+        app:tint="#FFFFFF" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_finished"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        app:layout_constraintTop_toBottomOf="@id/search_finished"
-        android:layout_margin="8dp" />
-
-    <EditText
-        android:id="@+id/search_in_progress"
+    <!-- Card Branco Principal -->
+    <LinearLayout
+        android:id="@+id/card"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Search In Progress"
-        android:textColorHint="#888888"
-        android:textColor="#FFFFFF"
-        app:layout_constraintTop_toBottomOf="@id/rv_finished"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="8dp" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_in_progress"
-        android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/search_in_progress"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/bg_card"
+        android:orientation="vertical"
+        android:padding="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_margin="8dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_title">
+
+        <!-- Score Geral (Agora dentro do card com cor contrastante) -->
+        <TextView
+            android:id="@+id/txt_overall_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0%"
+            android:textColor="#000000"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Busca Finalizados -->
+        <EditText
+            android:id="@+id/search_finished"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Search Finished"
+            android:textColorHint="#757575"
+            android:textColor="#000000"
+            android:textSize="14sp" />
+
+        <!-- Lista Finalizados -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_finished"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_marginTop="8dp"
+            android:clipToPadding="false"
+            android:paddingBottom="8dp" />
+
+        <!-- Busca Em Progresso -->
+        <EditText
+            android:id="@+id/search_in_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="Search In Progress"
+            android:textColorHint="#757575"
+            android:textColor="#000000"
+            android:textSize="14sp" />
+
+        <!-- Lista Em Progresso -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_in_progress"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="8dp"
+            android:clipToPadding="false"
+            android:paddingBottom="16dp" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
