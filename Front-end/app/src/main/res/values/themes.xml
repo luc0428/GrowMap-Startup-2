@@ -6,4 +6,15 @@
     </style>
 
     <style name="Theme.GrowMapApp" parent="Base.Theme.GrowMapApp" />
+
+    <style name="Theme.Roadmap" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:statusBarColor">@color/bg_dark</item>
+        <item name="android:windowBackground">@color/bg_dark</item>
+    </style>
+
+    <style name="Theme.QuizApp" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="android:statusBarColor">@color/bg_header</item>
+        <item name="android:windowBackground">@color/bg_dark</item>
+        <item name="colorPrimary">@color/accent_cyan</item>
+    </style>
 </resources>
