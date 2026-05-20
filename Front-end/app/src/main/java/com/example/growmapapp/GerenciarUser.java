@@ -1,4 +1,4 @@
-package com.example.novatelaupx;
+package com.example.;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,12 +14,15 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.growmapapp.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class GerenciarUser extends AppCompatActivity {
 
-    private UserAdapter adapter;
+    private com.example.novatelaupx.UserAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
