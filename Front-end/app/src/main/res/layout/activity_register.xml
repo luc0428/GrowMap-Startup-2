@@ -25,22 +25,26 @@
         android:padding="24dp">
 
         <EditText
+            android:id="@+id/editFullName"
             android:hint="Full Name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <EditText
-            android:hint="Phone or Gmail"
+            android:id="@+id/editGmail"
+            android:hint="Gmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <EditText
+            android:id="@+id/editPassword"
             android:hint="Password"
             android:inputType="textPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <EditText
+            android:id="@+id/editConfirmPassword"
             android:hint="Confirm Password"
             android:inputType="textPassword"
             android:layout_width="match_parent"
@@ -48,6 +52,7 @@
 
         <!-- Botão -->
         <Button
+            android:id="@+id/btnRegister"
             android:text="SIGN UP"
             android:textColor="@android:color/white"
             android:background="@drawable/bg_button"
@@ -57,6 +62,7 @@
 
         <!-- Voltar para login -->
         <TextView
+            android:id="@+id/txtBackToLogin"
             android:text="Already have account? Sign in"
             android:textColor="#666"
             android:layout_marginTop="16dp"

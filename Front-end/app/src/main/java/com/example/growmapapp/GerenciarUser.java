@@ -16,6 +16,9 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.growmapapp.adapter.UserAdapter;
+import com.example.growmapapp.model.User;
+
 import java.util.ArrayList;
 import java.util.List;
 
