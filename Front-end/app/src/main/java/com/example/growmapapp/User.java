@@ -1,4 +1,4 @@
-package com.example.novatelaupx;
+package com.example.growmapapp;
 
 public class User {
     private String name;

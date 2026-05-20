@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     app:layout_columnWeight="1"
     app:layout_gravity="fill_horizontal"
-    android:background="@drawable/bg_card_DarkBlue"
+    android:background="@drawable/bg_card_darkblue"
     android:orientation="vertical"
     android:padding="16dp">
 

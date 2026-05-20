@@ -5,13 +5,15 @@
     android:orientation="vertical"
     android:background="@color/bg_dark">
 
+
+
     <!-- Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/bg_header"
         android:orientation="horizontal"
-        android:padding="16dp"
+        android:padding="17dp"
         android:gravity="center_vertical">
 
         <TextView
@@ -47,13 +49,24 @@
 
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="Dashboard" android:textColor="@color/text_primary"
-            android:textSize="13sp" android:layout_marginEnd="16dp"/>
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="Cursos" android:textColor="@color/text_primary"
-            android:textSize="13sp" android:layout_marginEnd="16dp"/>
+            android:textSize="15sp" android:layout_marginEnd="16dp"/>
+
+        <TextView
+            android:id="@+id/btnCursos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cursos"
+            android:textColor="@color/text_primary"
+            android:textSize="15sp"
+            android:layout_marginEnd="16dp"
+            android:padding="12dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless"/>
+
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="Suporte" android:textColor="@color/text_primary"
-            android:textSize="13sp"/>
+            android:textSize="15sp"/>
     </LinearLayout>
 
     <ScrollView
@@ -67,15 +80,6 @@
             android:padding="20dp">
 
             <!-- Voltar -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_back"
-                android:paddingHorizontal="14dp"
-                android:paddingVertical="8dp"
-                android:text="‹ Voltar para o Dashboard"
-                android:textColor="@color/text_primary"
-                android:textSize="12sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -115,7 +119,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:background="@drawable/bg_card_DarkBlue"
+                android:background="@drawable/bg_card_darkblue"
                 android:orientation="vertical"
                 android:padding="20dp">
 

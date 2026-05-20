@@ -1,4 +1,4 @@
-package com.example.novatelaupx;
+package com.example.growmapapp;
 
 import android.view.LayoutInflater;
 import android.view.View;

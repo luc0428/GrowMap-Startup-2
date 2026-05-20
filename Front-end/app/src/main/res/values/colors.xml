@@ -25,4 +25,5 @@
     <color name="yellow">#FACC15</color>
     <color name="line_active">#22E0D6</color>
     <color name="line_inactive">#1F2937</color>
+    <color name="divider">#DDDDDD</color>
 </resources>

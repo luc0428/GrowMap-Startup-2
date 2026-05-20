@@ -33,6 +33,10 @@ public class DashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
+        TextView btnCursos = findViewById(R.id.btnCursos);
+
+
+
         Quiz[] quizzes = new Quiz[]{
             new Quiz("☕", "Quiz: Fundamentos do Java", "Teste seus conhecimentos em variáveis, loops e sintaxe básica."),
             new Quiz("🐍", "Quiz: Python para Dados", "Desafie-se com perguntas sobre Pandas e Numpy."),
