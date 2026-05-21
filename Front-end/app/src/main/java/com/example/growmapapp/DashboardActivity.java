@@ -1,20 +1,34 @@
 package com.example.growmapapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class DashboardActivity extends AppCompatActivity {
+
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private TextView userName, userRole, userAvatar, txtOverallScore;
+    private RecyclerView rvFinished, rvInProgress;
+    private LineChartView lineChart;
 
     static class Quiz {
         String icon, title, desc;
@@ -33,36 +47,155 @@ public class DashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
+        userName = findViewById(R.id.userName);
+        userRole = findViewById(R.id.userRole);
+        userAvatar = findViewById(R.id.userAvatar);
+        txtOverallScore = findViewById(R.id.txtOverallScore);
+        rvFinished = findViewById(R.id.rvFinished);
+        rvInProgress = findViewById(R.id.rvInProgress);
+        lineChart = findViewById(R.id.lineChart);
+
         TextView btnCursos = findViewById(R.id.btnCursos);
+        TextView btnDashboard = findViewById(R.id.btnDashboard);
+        TextView btnSuporte = findViewById(R.id.btnSuporte);
+        View userInfoHeader = findViewById(R.id.userInfoHeader);
+        ImageView btnThemeToggle = findViewById(R.id.btnThemeToggle);
 
+        loadUserData();
+        updateThemeIcon(btnThemeToggle);
 
-
-        Quiz[] quizzes = new Quiz[]{
-            new Quiz("☕", "Quiz: Fundamentos do Java", "Teste seus conhecimentos em variáveis, loops e sintaxe básica."),
-            new Quiz("🐍", "Quiz: Python para Dados", "Desafie-se com perguntas sobre Pandas e Numpy."),
-            new Quiz("📊", "Quiz: Funções do Excel", "Você domina PROCV, SOMASES e Tabelas Dinâmicas?"),
-            new Quiz("🔄", "Quiz: Colaboração no O365", "Prove seu conhecimento em Teams, SharePoint e OneDrive."),
-            new Quiz("🗂️", "Quiz: SQL JOINs", "Teste sua habilidade em combinar tabelas com JOINs.")
-        };
-        int[] ids = { R.id.quizJava, R.id.quizPython, R.id.quizExcel, R.id.quizO365, R.id.quizSql };
-        for (int i=0; i<ids.length; i++){
-            View v = findViewById(ids[i]);
-            ((TextView)v.findViewById(R.id.quizIcon)).setText(quizzes[i].icon);
-            ((TextView)v.findViewById(R.id.quizTitle)).setText(quizzes[i].title);
-            ((TextView)v.findViewById(R.id.quizDesc)).setText(quizzes[i].desc);
+        // Alternar Tema
+        if (btnThemeToggle != null) {
+            btnThemeToggle.setOnClickListener(v -> {
+                int mode = AppCompatDelegate.getDefaultNightMode();
+                if (mode == AppCompatDelegate.MODE_NIGHT_YES) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                }
+                recreate();
+            });
         }
 
-        List<Hist> hist = Arrays.asList(
-            new Hist("☕","Fundamentos do Java","8 / 10","80%","26/10/2025", false),
-            new Hist("📊","Funções do Excel","14 / 15","93%","25/10/2025", false),
-            new Hist("🐍","Python para Dados","5 / 10","50%","24/10/2025", true),
-            new Hist("🗂️","SQL JOINs","9 / 10","90%","23/10/2025", false),
-            new Hist("🔄","Colaboração no O365","6 / 10","60%","22/10/2025", true)
-        );
+        // Navegação
+        if (btnCursos != null) {
+            btnCursos.setOnClickListener(v -> {
+                startActivity(new Intent(this, RoadmapActivity.class));
+            });
+        }
 
-        RecyclerView rv = findViewById(R.id.rvHistorico);
-        rv.setLayoutManager(new LinearLayoutManager(this));
-        rv.setAdapter(new HistAdapter(hist));
+        if (userInfoHeader != null) {
+            userInfoHeader.setOnClickListener(v -> {
+                startActivity(new Intent(this, GerenciarUser.class));
+            });
+        }
+
+        if (userAvatar != null) {
+            userAvatar.setOnClickListener(v -> {
+                startActivity(new Intent(this, GerenciarUser.class));
+            });
+        }
+
+        if (btnDashboard != null) {
+            btnDashboard.setOnClickListener(v -> {
+                Toast.makeText(this, "Você já está na Dashboard", Toast.LENGTH_SHORT).show();
+            });
+        }
+
+        if (btnSuporte != null) {
+            btnSuporte.setOnClickListener(v -> {
+                startActivity(new Intent(this, SupportActivity.class));
+            });
+        }
+
+        setupRecyclerViews();
+        setupChart();
+    }
+
+    private void setupChart() {
+        if (lineChart != null) {
+            List<Float> data = Arrays.asList(30f, 45f, 40f, 70f, 65f, 90f, 85f);
+            List<String> labels = Arrays.asList("Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom");
+            lineChart.setData(data, labels);
+        }
+    }
+
+    private void setupRecyclerViews() {
+        if (rvFinished != null) {
+            rvFinished.setLayoutManager(new LinearLayoutManager(this));
+            List<Hist> finishedData = Arrays.asList(
+                    new Hist("☕", "Java Fundamentos", "10 / 10", "100%", "20/10/2023", false),
+                    new Hist("🌐", "Web Design", "8 / 10", "80%", "15/10/2023", false)
+            );
+            rvFinished.setAdapter(new HistAdapter(finishedData));
+        }
+
+        if (rvInProgress != null) {
+            rvInProgress.setLayoutManager(new LinearLayoutManager(this));
+            List<Hist> progressData = Arrays.asList(
+                    new Hist("🐍", "Python para Dados", "7 / 10", "75%", "Em progresso", true),
+                    new Hist("🎨", "UI/UX Advanced", "2 / 10", "20%", "Em progresso", true)
+            );
+            rvInProgress.setAdapter(new HistAdapter(progressData));
+        }
+    }
+
+    private void loadUserData() {
+        if (mAuth.getCurrentUser() == null) {
+            setUnknownUser();
+            return;
+        }
+
+        String userId = mAuth.getCurrentUser().getUid();
+        db.collection("user").document(userId).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null && task.getResult().exists()) {
+                        DocumentSnapshot doc = task.getResult();
+                        String name = doc.getString("fullname");
+                        String role = doc.getString("role");
+
+                        if (userName != null) {
+                            if (name != null && !name.isEmpty()) {
+                                userName.setText(name);
+                                if (userAvatar != null) {
+                                    userAvatar.setText(String.valueOf(name.charAt(0)).toUpperCase());
+                                }
+                            } else {
+                                userName.setText("Unknown");
+                                if (userAvatar != null) userAvatar.setText("?");
+                            }
+                        }
+
+                        if (userRole != null) {
+                            if (role != null && !role.isEmpty()) {
+                                userRole.setText(role);
+                            } else {
+                                userRole.setText("Bugado");
+                            }
+                        }
+                    } else {
+                        setUnknownUser();
+                    }
+                });
+    }
+
+    private void setUnknownUser() {
+        if (userName != null) userName.setText("Unknown");
+        if (userRole != null) userRole.setText("Bugado");
+        if (userAvatar != null) userAvatar.setText("?");
+    }
+
+    private void updateThemeIcon(ImageView btn) {
+        if (btn == null) return;
+        int mode = AppCompatDelegate.getDefaultNightMode();
+        if (mode == AppCompatDelegate.MODE_NIGHT_YES) {
+            btn.setImageResource(R.drawable.ic_sun);
+        } else {
+            btn.setImageResource(R.drawable.ic_moon);
+        }
     }
 
     static class HistAdapter extends RecyclerView.Adapter<HistAdapter.VH> {

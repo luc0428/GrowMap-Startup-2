@@ -3,6 +3,7 @@ package com.example.growmapapp;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -43,26 +44,60 @@ public class GerenciarUser extends AppCompatActivity {
         setupSearch();
     }
 
-    private void setupToolbar() {
-        ImageView btnThemeToggle = findViewById(R.id.btnThemeToggle);
-
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-            btnThemeToggle.setImageResource(android.R.drawable.ic_menu_day);
+    private void updateThemeIcon(ImageView btn) {
+        if (btn == null) return;
+        int mode = AppCompatDelegate.getDefaultNightMode();
+        if (mode == AppCompatDelegate.MODE_NIGHT_YES) {
+            btn.setImageResource(R.drawable.ic_sun);
         } else {
-            btnThemeToggle.setImageResource(android.R.drawable.ic_menu_recent_history);
+            btn.setImageResource(R.drawable.ic_moon);
+        }
+    }
+
+    private void setupToolbar() {
+        View btnBack = findViewById(R.id.btnBack);
+        ImageView btnThemeToggle = findViewById(R.id.btnThemeToggle);
+        View btnDashboard = findViewById(R.id.btnDashboard);
+        View btnCursos = findViewById(R.id.btnCursos);
+        View btnSuporte = findViewById(R.id.btnSuporte);
+
+        updateThemeIcon(btnThemeToggle);
+
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> finish());
         }
 
-        btnThemeToggle.setOnClickListener(v -> {
-            int currentMode = AppCompatDelegate.getDefaultNightMode();
+        if (btnThemeToggle != null) {
+            btnThemeToggle.setOnClickListener(v -> {
+                int mode = AppCompatDelegate.getDefaultNightMode();
+                if (mode == AppCompatDelegate.MODE_NIGHT_YES) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                }
+                recreate();
+            });
+        }
 
-            if (currentMode == AppCompatDelegate.MODE_NIGHT_YES) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            }
+        if (btnDashboard != null) {
+            btnDashboard.setOnClickListener(v -> {
+                android.content.Intent intent = new android.content.Intent(this, DashboardActivity.class);
+                intent.setFlags(android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP | android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+            });
+        }
 
-            recreate();
-        });
+        if (btnCursos != null) {
+            btnCursos.setOnClickListener(v -> {
+                startActivity(new android.content.Intent(this, RoadmapActivity.class));
+            });
+        }
+
+        if (btnSuporte != null) {
+            btnSuporte.setOnClickListener(v -> {
+                startActivity(new android.content.Intent(this, SupportActivity.class));
+            });
+        }
     }
 
     private void setupSearch() {

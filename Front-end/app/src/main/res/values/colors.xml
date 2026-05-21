@@ -3,27 +3,29 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- Roadmap Colors -->
-    <color name="bg_dark">#0B1220</color>
-    <color name="bg_card">#111B2E</color>
-    <color name="bg_card_border">#1E2A44</color>
-    <color name="bg_header">#0E1830</color>
-    <color name="bg_card_alt">#0F1729</color>
-    <color name="text_primary">#E6EDF7</color>
-    <color name="text_secondary">#8A94A6</color>
-    <color name="text_muted">#8B95B0</color>
-    <color name="accent_cyan">#22D3EE</color>
-    <color name="accent_cyan_dark">#0E7490</color>
-    <color name="success_green">#10B981</color>
-    <color name="warning_orange">#F59E0B</color>
-    <color name="avatar_blue">#1E40AF</color>
-    <color name="cyan">#22E0D6</color>
-    <color name="cyan_glow">#5EEAD4</color>
-    <color name="purple">#7C3AED</color>
-    <color name="purple_glow">#A78BFA</color>
-    <color name="red">#EF4444</color>
-    <color name="yellow">#FACC15</color>
-    <color name="line_active">#22E0D6</color>
-    <color name="line_inactive">#1F2937</color>
-    <color name="divider">#DDDDDD</color>
+    <!-- Light Theme Colors (Default) -->
+    <color name="bg_dark">#F1F5F9</color>
+    <color name="bg_card">#FFFFFF</color>
+    <color name="bg_card_border">#E2E8F0</color>
+    <color name="bg_header">#FFFFFF</color>
+    <color name="bg_card_alt">#F8FAFC</color>
+    <color name="text_primary">#0F172A</color>
+    <color name="text_secondary">#475569</color>
+    <color name="text_muted">#94A3B8</color>
+    <color name="accent_cyan">#0891B2</color>
+    <color name="accent_cyan_dark">#155E75</color>
+    <color name="success_green">#16A34A</color>
+    <color name="warning_orange">#D97706</color>
+    <color name="avatar_blue">#2563EB</color>
+    <color name="cyan">#06B6D4</color>
+    <color name="cyan_glow">#22D3EE</color>
+    <color name="purple">#9333EA</color>
+    <color name="purple_glow">#A855F7</color>
+    <color name="red">#DC2626</color>
+    <color name="yellow">#EAB308</color>
+    <color name="line_active">#06B6D4</color>
+    <color name="line_inactive">#CBD5E1</color>
+    <color name="divider">#E2E8F0</color>
+    <color name="chat_text_user">#FFFFFF</color>
+    <color name="chat_text_support">#1E293B</color>
 </resources>

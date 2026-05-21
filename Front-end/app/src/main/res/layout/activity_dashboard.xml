@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/bg_dark">
-
-
 
     <!-- Header -->
     <LinearLayout
@@ -13,10 +13,14 @@
         android:layout_height="wrap_content"
         android:background="@color/bg_header"
         android:orientation="horizontal"
-        android:padding="17dp"
+        android:paddingTop="32dp"
+        android:paddingBottom="17dp"
+        android:paddingStart="17dp"
+        android:paddingEnd="17dp"
         android:gravity="center_vertical">
 
         <TextView
+            android:id="@+id/userAvatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/bg_avatar"
@@ -24,32 +28,46 @@
             android:text="K"
             android:textColor="@color/accent_cyan"
             android:textSize="18sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true"/>
 
         <LinearLayout
+            android:id="@+id/userInfoHeader"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="12dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true">
             <TextView
+                android:id="@+id/userName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Kauan Davi"
+                android:text="Carregando..."
                 android:textColor="@color/accent_cyan"
                 android:textStyle="bold"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/userRole"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Analista de TI"
+                android:text="..."
                 android:textColor="@color/text_secondary"
                 android:textSize="11sp"/>
         </LinearLayout>
 
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="Dashboard" android:textColor="@color/text_primary"
-            android:textSize="15sp" android:layout_marginEnd="16dp"/>
+        <TextView
+            android:id="@+id/btnDashboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dashboard"
+            android:textColor="@color/accent_cyan"
+            android:textSize="15sp"
+            android:layout_marginEnd="16dp"
+            android:clickable="true"
+            android:focusable="true"/>
 
         <TextView
             android:id="@+id/btnCursos"
@@ -59,19 +77,37 @@
             android:textColor="@color/text_primary"
             android:textSize="15sp"
             android:layout_marginEnd="16dp"
-            android:padding="12dp"
             android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackgroundBorderless"/>
+            android:focusable="true"/>
 
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="Suporte" android:textColor="@color/text_primary"
-            android:textSize="15sp"/>
+        <TextView
+            android:id="@+id/btnSuporte"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Suporte"
+            android:textColor="@color/text_primary"
+            android:textSize="15sp"
+            android:layout_marginEnd="16dp"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <ImageView
+            android:id="@+id/btnThemeToggle"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Alternar Tema"
+            android:padding="6dp"
+            android:src="@drawable/ic_moon"
+            app:tint="@color/accent_cyan"
+            android:clickable="true"
+            android:focusable="true"/>
     </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -79,88 +115,233 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <!-- Voltar -->
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="Praticar"
-                android:textColor="@color/text_primary"
-                android:textSize="24sp"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Escolha um tópico e teste seu conhecimento."
-                android:textColor="@color/text_secondary"
-                android:textSize="13sp"/>
-
-            <!-- Grid de Quizzes -->
-            <androidx.gridlayout.widget.GridLayout
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                app:columnCount="2"
-                app:useDefaultMargins="true">
-
-                <include layout="@layout/item_quiz_card" android:id="@+id/quizJava"/>
-                <include layout="@layout/item_quiz_card" android:id="@+id/quizPython"/>
-                <include layout="@layout/item_quiz_card" android:id="@+id/quizExcel"/>
-                <include layout="@layout/item_quiz_card" android:id="@+id/quizO365"/>
-                <include layout="@layout/item_quiz_card" android:id="@+id/quizSql"/>
-            </androidx.gridlayout.widget.GridLayout>
-
-            <!-- Histórico -->
+            <!-- Hero: Nota Geral -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
                 android:background="@drawable/bg_card_darkblue"
-                android:orientation="vertical"
-                android:padding="20dp">
+                android:orientation="horizontal"
+                android:padding="20dp"
+                android:gravity="center_vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Meu Histórico de Tentativas"
-                    android:textColor="@color/text_primary"
-                    android:textSize="18sp"
-                    android:textStyle="bold"/>
+                <RelativeLayout
+                    android:layout_width="90dp"
+                    android:layout_height="90dp">
+                    <ProgressBar
+                        android:id="@+id/donutProgress"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:indeterminate="false"
+                        android:max="100"
+                        android:progress="83"
+                        android:progressDrawable="@drawable/bg_donut" />
+                    <TextView
+                        android:id="@+id/txtOverallScore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="83%"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold"/>
+                </RelativeLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:orientation="horizontal">
-                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                        android:layout_weight="3" android:text="Quiz"
-                        android:textColor="@color/text_secondary" android:textSize="12sp"/>
-                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                        android:layout_weight="1" android:text="Acertos"
-                        android:textColor="@color/text_secondary" android:textSize="12sp"/>
-                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                        android:layout_weight="1" android:text="%"
-                        android:textColor="@color/text_secondary" android:textSize="12sp"/>
-                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                        android:layout_weight="1" android:text="Data"
-                        android:textColor="@color/text_secondary" android:textSize="12sp"
-                        android:gravity="end"/>
+                    android:layout_weight="1"
+                    android:layout_marginStart="20dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/nota_geral"
+                        android:textColor="@color/accent_cyan"
+                        android:textSize="14sp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Seu desempenho geral está excelente! Continue assim para bater suas metas."
+                        android:textColor="@color/text_secondary"
+                        android:textSize="11sp"
+                        android:layout_marginTop="4dp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Seção: Em Andamento -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/em_andamento"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"
+                android:textSize="16sp"/>
+
+            <EditText
+                android:id="@+id/searchInProgress"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_card_darkblue"
+                android:hint="Buscar cursos em andamento..."
+                android:textColorHint="@color/text_muted"
+                android:textColor="@color/text_primary"
+                android:paddingHorizontal="16dp"
+                android:textSize="14sp"
+                android:inputType="text"
+                android:drawableStart="@android:drawable/ic_menu_search"
+                android:drawablePadding="8dp"
+                android:drawableTint="@color/text_muted"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvInProgress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:nestedScrollingEnabled="false"/>
+
+            <!-- Seção: Histórico -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="Histórico de Conclusão"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"
+                android:textSize="16sp"/>
+
+            <EditText
+                android:id="@+id/searchFinished"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_card_darkblue"
+                android:hint="Buscar no histórico..."
+                android:textColorHint="@color/text_muted"
+                android:textColor="@color/text_primary"
+                android:paddingHorizontal="16dp"
+                android:textSize="14sp"
+                android:inputType="text"
+                android:drawableStart="@android:drawable/ic_menu_search"
+                android:drawablePadding="8dp"
+                android:drawableTint="@color/text_muted"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvFinished"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:nestedScrollingEnabled="false"
+                android:background="@drawable/bg_card_darkblue"
+                android:paddingHorizontal="12dp"/>
+
+            <!-- Seção: Estatísticas Adicionais (Descendo) -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="40dp"
+                android:background="@color/divider"
+                android:alpha="0.2"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Estatísticas do Setor"
+                android:textColor="@color/text_muted"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:textAllCaps="true"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_card_darkblue"
+                    android:padding="12dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/setor_ti"
+                        android:textColor="@color/accent_cyan"
+                        android:textStyle="bold"
+                        android:textSize="12sp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/num_colaboradores"
+                        android:textColor="@color/text_primary"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="4dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Total de pessoas"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="10sp"/>
                 </LinearLayout>
 
-                <View android:layout_width="match_parent" android:layout_height="1dp"
-                    android:layout_marginTop="8dp" android:background="@drawable/divider"/>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvHistorico"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:nestedScrollingEnabled="false" />
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:background="@drawable/bg_card_darkblue"
+                    android:padding="16dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Engajamento"
+                        android:textColor="@color/success_green"
+                        android:textStyle="bold"
+                        android:textSize="12sp"/>
+                    <ProgressBar
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        android:layout_marginTop="12dp"
+                        android:progress="60"
+                        android:progressDrawable="@drawable/progress_gradient"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="60% de engajamento"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="10sp"
+                        android:layout_marginTop="8dp"/>
+                </LinearLayout>
             </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/frequencia_tarefas"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
+
+            <com.example.growmapapp.LineChartView
+                android:id="@+id/lineChart"
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="40dp"
+                android:background="@drawable/bg_card_darkblue"
+                android:padding="16dp"/>
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

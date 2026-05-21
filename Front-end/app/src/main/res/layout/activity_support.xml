@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:background="@color/bg_dark">
 
-    <!-- Navbar (Identical to Dashboard) -->
+    <!-- Navbar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
             android:layout_height="40dp"
             android:background="@drawable/bg_avatar"
             android:gravity="center"
-            android:text="K"
+            android:text="S"
             android:textColor="@color/accent_cyan"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -45,7 +45,7 @@
                 android:id="@+id/userName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Kauan Davi"
+                android:text="Carregando..."
                 android:textColor="@color/accent_cyan"
                 android:textStyle="bold"
                 android:textSize="14sp"/>
@@ -53,7 +53,7 @@
                 android:id="@+id/userRole"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Analista de TI"
+                android:text="..."
                 android:textColor="@color/text_secondary"
                 android:textSize="11sp"/>
         </LinearLayout>
@@ -72,7 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cursos"
-            android:textColor="@color/accent_cyan"
+            android:textColor="@color/text_primary"
             android:textSize="15sp"
             android:layout_marginEnd="16dp"
             android:clickable="true"
@@ -83,7 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Suporte"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/accent_cyan"
             android:textSize="15sp"
             android:layout_marginEnd="16dp"
             android:clickable="true"
@@ -102,97 +102,119 @@
             android:focusable="true"/>
     </LinearLayout>
 
-    <androidx.core.widget.NestedScrollView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="32dp">
+            android:padding="20dp">
 
-            <!-- BACK -->
-            <TextView
-                android:id="@+id/btnBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/bg_card_darkblue"
-                android:paddingHorizontal="14dp"
-                android:paddingVertical="8dp"
-                android:text="‹ Voltar para o Dashboard"
-                android:textColor="@color/text_secondary"
-                android:textSize="13sp"
-                android:clickable="true"
-                android:focusable="true"/>
-
-            <!-- TITLE -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:text="Meus Road Maps"
+                android:text="Como podemos ajudar?"
                 android:textColor="@color/text_primary"
-                android:textSize="26sp"
+                android:textSize="24sp"
                 android:textStyle="bold"/>
 
-            <!-- TABS -->
-            <HorizontalScrollView
+            <!-- FAQ Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Perguntas Frequentes"
+                android:textColor="@color/accent_cyan"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+
+            <LinearLayout
+                android:id="@+id/faqContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scrollbars="none"
-                android:layout_marginTop="16dp"
-                android:paddingHorizontal="16dp">
-                <LinearLayout
-                    android:id="@+id/roadmapTabsContainer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView style="@style/Tab" android:background="@drawable/bg_badge_green" android:text="☕  Java" android:textColor="#FFFFFF"/>
-                    <TextView style="@style/Tab" android:background="@drawable/bg_card_darkblue" android:text="🐍  Python"/>
-                    <TextView style="@style/Tab" android:background="@drawable/bg_card_darkblue" android:text="📊  Excel"/>
-                    <TextView style="@style/Tab" android:background="@drawable/bg_card_darkblue" android:text="🔄  O365"/>
-                </LinearLayout>
-            </HorizontalScrollView>
+                android:layout_marginTop="12dp"
+                android:orientation="vertical">
+                <!-- FAQ Items will be added here -->
+            </LinearLayout>
 
-            <!-- ROADMAP PANEL -->
+            <!-- Mini Chat Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="Fale com nosso suporte"
+                android:textColor="@color/accent_cyan"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_height="450dp"
+                android:layout_marginTop="12dp"
                 android:background="@drawable/bg_card_darkblue"
                 android:orientation="vertical"
-                android:paddingVertical="24dp"
-                android:paddingHorizontal="16dp">
+                android:padding="8dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="Jornada Java Developer"
-                    android:textColor="@color/accent_cyan"
-                    android:textStyle="bold"
-                    android:textSize="16sp"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvChat"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:clipToPadding="false"
+                    android:paddingBottom="8dp" />
 
-                <View android:layout_width="match_parent" android:layout_height="1dp"
-                    android:background="@color/divider" android:layout_marginTop="16dp" android:alpha="0.2"/>
-
-                <!-- Simple list-like Roadmap for better consistency -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="20dp">
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal"
+                    android:gravity="bottom"
+                    android:padding="6dp"
+                    android:background="@drawable/bg_chat_input">
 
-                    <include layout="@layout/item_roadmap_step" />
+                    <ImageButton
+                        android:id="@+id/btnAttach"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@android:drawable/ic_input_add"
+                        app:tint="@color/text_secondary"
+                        android:padding="8dp"
+                        android:contentDescription="Anexar"/>
+
+                    <EditText
+                        android:id="@+id/etMessage"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:hint="@string/hint_mensagem"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="10dp"
+                        android:textColor="@color/text_primary"
+                        android:textColorHint="@color/text_secondary"
+                        android:textSize="15sp"
+                        android:inputType="textMultiLine|textCapSentences"
+                        android:maxLines="4"
+                        android:minHeight="40dp"
+                        android:imeOptions="actionSend"/>
+
+                    <ImageButton
+                        android:id="@+id/btnSendMessage"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="2dp"
+                        android:layout_marginBottom="2dp"
+                        android:background="@drawable/bg_chat_send_button"
+                        android:src="@android:drawable/ic_menu_send"
+                        android:contentDescription="@string/enviar"
+                        app:tint="@color/white"
+                        android:padding="10dp"/>
                 </LinearLayout>
-
             </LinearLayout>
+
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+    </ScrollView>
 </LinearLayout>
