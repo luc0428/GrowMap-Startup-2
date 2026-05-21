@@ -3,6 +3,7 @@ package com.example.growmapapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegisterActivity extends AppCompatActivity {
 
+    private static final String TAG = "RegisterActivity";
     private EditText editFullName, editGmail, editPassword, editConfirmPassword;
     private Button btnRegister;
     private TextView txtBackToLogin;
@@ -69,8 +71,10 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         String userId = mAuth.getCurrentUser().getUid();
+                        Log.d(TAG, "FirebaseAuth: Success! UID: " + userId);
                         saveUserToFirestore(userId, fullName, email, password);
                     } else {
+                        Log.e(TAG, "FirebaseAuth: Failure", task.getException());
                         Toast.makeText(RegisterActivity.this, "Erro no cadastro: " + task.getException().getMessage(),
                                 Toast.LENGTH_LONG).show();
                     }
@@ -78,15 +82,18 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void saveUserToFirestore(String userId, String fullName, String email, String password) {
+        Log.d(TAG, "Saving user to Firestore... Collection: user, UID: " + userId);
         User user = new User(fullName, email, password);
         db.collection("user").document(userId)
                 .set(user)
                 .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Firestore: Success!");
                     Toast.makeText(RegisterActivity.this, "Cadastro realizado com sucesso!", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                     finish();
                 })
                 .addOnFailureListener(e -> {
+                    Log.e(TAG, "Firestore: Failure", e);
                     Toast.makeText(RegisterActivity.this, "Erro ao salvar dados: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
