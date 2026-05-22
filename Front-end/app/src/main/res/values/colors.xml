@@ -26,6 +26,10 @@
     <color name="line_active">#06B6D4</color>
     <color name="line_inactive">#CBD5E1</color>
     <color name="divider">#E2E8F0</color>
+    <color name="roadmap_panel_bg">#FFFFFF</color>
+    <color name="roadmap_panel_stroke">#E2E8F0</color>
+    <color name="roadmap_module_card_bg">#F8FAFC</color>
+    <color name="roadmap_module_card_stroke">#E2E8F0</color>
     <color name="chat_text_user">#FFFFFF</color>
     <color name="chat_text_support">#1E293B</color>
 </resources>

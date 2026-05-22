@@ -129,16 +129,38 @@
                 android:clickable="true"
                 android:focusable="true"/>
 
-            <!-- TITLE -->
-            <TextView
-                android:layout_width="wrap_content"
+            <!-- TITLE & CREATE BUTTON -->
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
-                android:text="Meus Road Maps"
-                android:textColor="@color/text_primary"
-                android:textSize="26sp"
-                android:textStyle="bold"/>
+                android:paddingHorizontal="16dp">
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Meus Road Maps"
+                    android:textColor="@color/text_primary"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/btnCreateRoad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/bg_badge_green"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="6dp"
+                    android:text="+ Criar Road"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:clickable="true"
+                    android:focusable="true"/>
+            </RelativeLayout>
 
             <!-- TABS -->
             <HorizontalScrollView
@@ -165,33 +187,255 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/bg_card_darkblue"
+                android:background="@drawable/bg_roadmap_panel"
                 android:orientation="vertical"
-                android:paddingVertical="24dp"
-                android:paddingHorizontal="16dp">
+                android:paddingVertical="24dp">
 
-                <TextView
+                <!-- TOP TARGET -->
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="Jornada Java Developer"
-                    android:textColor="@color/accent_cyan"
-                    android:textStyle="bold"
-                    android:textSize="16sp"/>
-
-                <View android:layout_width="match_parent" android:layout_height="1dp"
-                    android:background="@color/divider" android:layout_marginTop="16dp" android:alpha="0.2"/>
-
-                <!-- Simple list-like Roadmap for better consistency -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginTop="20dp">
-
-                    <include layout="@layout/item_roadmap_step" />
+                    android:gravity="center">
+                    <FrameLayout
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_target">
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_target"
+                            app:tint="@color/accent_cyan"/>
+                    </FrameLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="Role para cima e suba na sua jornada!"
+                        android:textColor="@color/accent_cyan"
+                        android:textSize="11sp"
+                        android:textStyle="bold"/>
                 </LinearLayout>
 
+                <!-- ROW: locked node (left/center) + Orientação a Objetos card (right) -->
+                <LinearLayout
+                    android:id="@+id/rowModuleOO"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="16dp"
+                    android:alpha="0.5">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"/>
+
+                    <FrameLayout
+                        android:id="@+id/nodeOO"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp">
+                        <View
+                            android:id="@+id/glowOO"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/bg_node_glow_yellow"
+                            android:visibility="gone"/>
+                        <FrameLayout
+                            android:id="@+id/containerOO"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/bg_node_locked">
+                            <ImageView
+                                android:id="@+id/ivStatusOO"
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_lock"
+                                app:tint="@color/warning_orange"/>
+                        </FrameLayout>
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:id="@+id/cardOO"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.4"
+                        android:layout_marginStart="12dp"
+                        android:background="@drawable/bg_module_card"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="12dp"
+                        android:clickable="true"
+                        android:focusable="true">
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/ic_key"
+                            app:tint="@color/warning_orange"/>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="10dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Orientação a Objetos"
+                                android:textColor="@color/text_primary"
+                                android:textStyle="bold"
+                                android:textSize="13sp"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Classes, Herança, Polimorfismo."
+                                android:textColor="@color/text_muted"
+                                android:textSize="11sp"/>
+                        </LinearLayout>
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:src="@drawable/ic_arrow_right"
+                            app:tint="@color/text_muted"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- ROW: Lógica card (left) + hourglass node (right/center) -->
+                <LinearLayout
+                    android:id="@+id/rowModuleLogica"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="16dp">
+
+                    <LinearLayout
+                        android:id="@+id/cardLogica"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.4"
+                        android:background="@drawable/bg_module_card"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="12dp"
+                        android:clickable="true"
+                        android:focusable="true">
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/ic_brain"
+                            app:tint="@color/purple"/>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="10dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Lógica e Fundamentos"
+                                android:textColor="@color/text_primary"
+                                android:textStyle="bold"
+                                android:textSize="13sp"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Sintaxe básica, variáveis, loops."
+                                android:textColor="@color/text_muted"
+                                android:textSize="11sp"/>
+                        </LinearLayout>
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:src="@drawable/ic_arrow_right"
+                            app:tint="@color/text_muted"/>
+                    </LinearLayout>
+
+                    <FrameLayout
+                        android:id="@+id/nodeLogica"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="12dp">
+                        <View
+                            android:id="@+id/glowLogica"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/bg_node_glow_purple"/>
+                        <FrameLayout
+                            android:id="@+id/containerLogica"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/bg_node_inprogress">
+                            <ImageView
+                                android:id="@+id/ivStatusLogica"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_hourglass"
+                                app:tint="@color/purple"/>
+                        </FrameLayout>
+                    </FrameLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"/>
+                </LinearLayout>
+
+                <!-- START NODE -->
+                <LinearLayout
+                    android:id="@+id/btnStartJourney"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="56dp"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <FrameLayout
+                        android:id="@+id/nodeStart"
+                        android:layout_width="76dp"
+                        android:layout_height="76dp">
+                        <View
+                            android:id="@+id/glowStart"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/bg_node_glow_cyan"/>
+                        <FrameLayout
+                            android:id="@+id/containerStart"
+                            android:layout_width="62dp"
+                            android:layout_height="62dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/bg_node_start">
+                            <ImageView
+                                android:id="@+id/ivStatusStart"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_rocket"
+                                app:tint="@color/accent_cyan"/>
+                        </FrameLayout>
+                    </FrameLayout>
+                    <TextView
+                        android:id="@+id/tvStartLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Início da Jornada"
+                        android:textColor="@color/text_primary"
+                        android:textSize="14sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

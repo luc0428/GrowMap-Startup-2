@@ -10,4 +10,8 @@
     <color name="text_muted">#8B95B0</color>
     <color name="accent_cyan">#22D3EE</color>
     <color name="accent_cyan_dark">#0E7490</color>
+    <color name="roadmap_panel_bg">#0F1729</color>
+    <color name="roadmap_panel_stroke">#1F2A44</color>
+    <color name="roadmap_module_card_bg">#111A2E</color>
+    <color name="roadmap_module_card_stroke">#1F2A44</color>
 </resources>
