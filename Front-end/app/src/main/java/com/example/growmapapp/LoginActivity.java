@@ -34,7 +34,8 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(v -> loginUser());
 
         txtGoToRegister.setOnClickListener(v -> {
-            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+            startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
+            finish();
         });
     }
 
