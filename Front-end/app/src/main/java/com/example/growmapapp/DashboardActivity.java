@@ -57,6 +57,7 @@ public class DashboardActivity extends AppCompatActivity {
         rvFinished = findViewById(R.id.rvFinished);
         rvInProgress = findViewById(R.id.rvInProgress);
         lineChart = findViewById(R.id.lineChart);
+        TextView btnHistorico = findViewById(R.id.btnHistorico);
 
         TextView btnCursos = findViewById(R.id.btnCursos);
         TextView btnDashboard = findViewById(R.id.btnDashboard);
@@ -66,6 +67,12 @@ public class DashboardActivity extends AppCompatActivity {
 
         loadUserData();
         updateThemeIcon(btnThemeToggle);
+
+        if (btnHistorico != null) {
+            btnHistorico.setOnClickListener(v -> {
+                startActivity(new Intent(this, GameQuizActivity.class));
+            });
+        }
 
         // Alternar Tema
         if (btnThemeToggle != null) {
@@ -114,6 +121,8 @@ public class DashboardActivity extends AppCompatActivity {
         setupRecyclerViews();
         setupChart();
     }
+
+
 
     private void setupChart() {
         if (lineChart != null) {
