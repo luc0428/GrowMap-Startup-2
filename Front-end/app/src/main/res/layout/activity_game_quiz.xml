@@ -60,7 +60,9 @@
                     android:layout_height="wrap_content"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
-                    android:padding="12dp"/>
+                    android:padding="12dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/bg_card_darkblue"/>
 
                 <RadioButton
                     android:id="@+id/option2"
@@ -68,7 +70,9 @@
                     android:layout_height="wrap_content"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
-                    android:padding="12dp"/>
+                    android:padding="12dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/bg_card_darkblue"/>
 
                 <RadioButton
                     android:id="@+id/option3"
@@ -76,7 +80,9 @@
                     android:layout_height="wrap_content"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
-                    android:padding="12dp"/>
+                    android:padding="12dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/bg_card_darkblue"/>
 
                 <RadioButton
                     android:id="@+id/option4"
@@ -84,7 +90,9 @@
                     android:layout_height="wrap_content"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
-                    android:padding="12dp"/>
+                    android:padding="12dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/bg_card_darkblue"/>
             </RadioGroup>
 
             <Button
@@ -97,6 +105,18 @@
                 android:textSize="18sp"
                 android:layout_marginTop="30dp"
                 android:backgroundTint="#00AEEF"/>
+
+            <Button
+                android:id="@+id/btnExit"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="SAIR"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="#FF5252"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/txtResult"

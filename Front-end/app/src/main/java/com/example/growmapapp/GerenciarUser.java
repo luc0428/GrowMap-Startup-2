@@ -1,71 +1,125 @@
 package com.example.growmapapp;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.growmapapp.adapter.UserAdapter;
-import com.example.growmapapp.model.User;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class GerenciarUser extends AppCompatActivity {
 
-    private UserAdapter adapter;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.gerenciar_user);
+        setContentView(R.layout.activity_gerenciar_user);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
-        setupToolbar();
-        setupRecyclerView();
-        setupSearch();
+        setupNavbar();
+        setupActions();
+        loadUserInfo();
     }
 
-    private void updateThemeIcon(ImageView btn) {
-        if (btn == null) return;
-        int mode = AppCompatDelegate.getDefaultNightMode();
-        if (mode == AppCompatDelegate.MODE_NIGHT_YES) {
-            btn.setImageResource(R.drawable.ic_sun);
-        } else {
-            btn.setImageResource(R.drawable.ic_moon);
-        }
+    private void loadUserInfo() {
+        if (mAuth.getCurrentUser() == null) return;
+
+        String userId = mAuth.getCurrentUser().getUid();
+        db.collection("user").document(userId).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null && task.getResult().exists()) {
+                        String name = task.getResult().getString("fullname");
+                        String role = task.getResult().getString("role");
+                        String email = task.getResult().getString("email");
+
+                        TextView userName = findViewById(R.id.userName);
+                        TextView userRole = findViewById(R.id.userRole);
+                        TextView userAvatar = findViewById(R.id.userAvatar);
+                        EditText etName = findViewById(R.id.etName);
+                        EditText etRole = findViewById(R.id.etRole);
+                        EditText etEmail = findViewById(R.id.etEmail);
+
+                        if (userName != null && name != null) userName.setText(name);
+                        if (userRole != null && role != null) userRole.setText(role);
+                        if (userAvatar != null && name != null && !name.isEmpty()) {
+                            userAvatar.setText(String.valueOf(name.charAt(0)).toUpperCase());
+                        }
+
+                        if (etName != null && name != null) etName.setText(name);
+                        if (etRole != null && role != null) etRole.setText(role);
+                        if (etEmail != null && email != null) etEmail.setText(email);
+                    }
+                });
     }
 
-    private void setupToolbar() {
+    private void setupActions() {
         View btnBack = findViewById(R.id.btnBack);
-        ImageView btnThemeToggle = findViewById(R.id.btnThemeToggle);
-        View btnDashboard = findViewById(R.id.btnDashboard);
-        View btnCursos = findViewById(R.id.btnCursos);
-        View btnSuporte = findViewById(R.id.btnSuporte);
-
-        updateThemeIcon(btnThemeToggle);
-
         if (btnBack != null) {
             btnBack.setOnClickListener(v -> finish());
         }
+
+        View btnUpdate = findViewById(R.id.btnUpdate);
+        if (btnUpdate != null) {
+            btnUpdate.setOnClickListener(v -> saveUserData());
+        }
+    }
+
+    private void saveUserData() {
+        if (mAuth.getCurrentUser() == null) return;
+
+        String userId = mAuth.getCurrentUser().getUid();
+        EditText etName = findViewById(R.id.etName);
+        EditText etRole = findViewById(R.id.etRole);
+        EditText etEmail = findViewById(R.id.etEmail);
+
+        String name = etName.getText().toString().trim();
+        String role = etRole.getText().toString().trim();
+        String email = etEmail.getText().toString().trim();
+
+        if (name.isEmpty() || role.isEmpty() || email.isEmpty()) {
+            Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        java.util.Map<String, Object> updates = new java.util.HashMap<>();
+        updates.put("fullname", name);
+        updates.put("role", role);
+        updates.put("email", email);
+
+        db.collection("user").document(userId).update(updates)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Dados atualizados com sucesso!", Toast.LENGTH_SHORT).show();
+                    loadUserInfo(); // Refresh UI
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Erro ao atualizar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void setupNavbar() {
+        ImageView btnThemeToggle = findViewById(R.id.btnThemeToggle);
+        View userAvatar = findViewById(R.id.userAvatar);
+        TextView btnDashboard = findViewById(R.id.btnNavDashboardText);
+        TextView btnSuporte = findViewById(R.id.btnNavSuporteText);
+
+        // Bottom Navbar
+        View btnNavHome = findViewById(R.id.btnNavHome);
+        View btnNavRoadmap = findViewById(R.id.btnNavRoadmap);
+        View btnNavGestao = findViewById(R.id.btnNavGestao);
+        View btnNavSuporte = findViewById(R.id.btnNavSuporte);
+
+        updateThemeIcon(btnThemeToggle);
 
         if (btnThemeToggle != null) {
             btnThemeToggle.setOnClickListener(v -> {
@@ -81,61 +135,57 @@ public class GerenciarUser extends AppCompatActivity {
 
         if (btnDashboard != null) {
             btnDashboard.setOnClickListener(v -> {
-                android.content.Intent intent = new android.content.Intent(this, DashboardActivity.class);
-                intent.setFlags(android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP | android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                Intent intent = new Intent(this, DashboardActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
-            });
-        }
-
-        if (btnCursos != null) {
-            btnCursos.setOnClickListener(v -> {
-                startActivity(new android.content.Intent(this, RoadmapActivity.class));
             });
         }
 
         if (btnSuporte != null) {
             btnSuporte.setOnClickListener(v -> {
-                startActivity(new android.content.Intent(this, SupportActivity.class));
+                startActivity(new Intent(this, SupportActivity.class));
+            });
+        }
+
+        if (userAvatar != null) {
+            userAvatar.setOnClickListener(v -> startActivity(new Intent(this, ProfileActivity.class)));
+        }
+
+        // Bottom Navbar Listeners
+        if (btnNavHome != null) {
+            btnNavHome.setOnClickListener(v -> {
+                Intent intent = new Intent(this, DashboardActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+            });
+        }
+
+        if (btnNavRoadmap != null) {
+            btnNavRoadmap.setOnClickListener(v -> {
+                startActivity(new Intent(this, RoadmapActivity.class));
+            });
+        }
+
+        if (btnNavGestao != null) {
+            btnNavGestao.setOnClickListener(v -> {
+                Toast.makeText(this, "Você já está na Gestão", Toast.LENGTH_SHORT).show();
+            });
+        }
+
+        if (btnNavSuporte != null) {
+            btnNavSuporte.setOnClickListener(v -> {
+                startActivity(new Intent(this, SupportActivity.class));
             });
         }
     }
 
-    private void setupSearch() {
-        EditText etSearch = findViewById(R.id.etSearch);
-
-        etSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (adapter != null) {
-                    adapter.filter(s.toString());
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
-
-        findViewById(R.id.btnAddCollaborator).setOnClickListener(v ->
-                Toast.makeText(this, "Adicionar novo colaborador", Toast.LENGTH_SHORT).show()
-        );
-    }
-
-    private void setupRecyclerView() {
-        RecyclerView rvUsers = findViewById(R.id.rvUsers);
-        rvUsers.setLayoutManager(new LinearLayoutManager(this));
-
-        List<User> userList = new ArrayList<>();
-
-        userList.add(new User("Kauan Davi", "Analista de TI", "kauan.davi@email.com", 75, "2 anos"));
-        userList.add(new User("Larissa Lima", "Desenvolvedora Frontend", "larissa.lima@email.com", 92, "1 ano e 3 meses"));
-        userList.add(new User("Rafael Souza", "Analista de BI", "rafael.souza@email.com", 88, "6 meses"));
-        userList.add(new User("Gabriel Alves", "Designer UI/UX", "gabriel.alves@email.com", 65, "2 anos e 10 meses"));
-        userList.add(new User("Lucas Martins", "Suporte Técnico", "lucas.martins@email.com", 80, "1 ano e 1 mês"));
-
-        adapter = new UserAdapter(userList);
-        rvUsers.setAdapter(adapter);
+    private void updateThemeIcon(ImageView btn) {
+        if (btn == null) return;
+        int mode = AppCompatDelegate.getDefaultNightMode();
+        if (mode == AppCompatDelegate.MODE_NIGHT_YES) {
+            btn.setImageResource(R.drawable.ic_sun);
+        } else {
+            btn.setImageResource(R.drawable.ic_moon);
+        }
     }
 }

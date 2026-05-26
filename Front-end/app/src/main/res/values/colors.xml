@@ -32,4 +32,5 @@
     <color name="roadmap_module_card_stroke">#E2E8F0</color>
     <color name="chat_text_user">#FFFFFF</color>
     <color name="chat_text_support">#1E293B</color>
+    <color name="bg_card_darkblue">#1E293B</color>
 </resources>

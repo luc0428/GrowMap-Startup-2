@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,8 +19,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DashboardActivity extends AppCompatActivity {
@@ -28,17 +30,14 @@ public class DashboardActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private TextView userName, userRole, userAvatar, txtOverallScore;
     private RecyclerView rvFinished, rvInProgress;
-    private LineChartView lineChart;
+    private HistAdapter finishedAdapter, progressAdapter;
+    private List<Hist> fullFinishedData = new ArrayList<>(), fullProgressData = new ArrayList<>();
 
-    static class Quiz {
-        String icon, title, desc;
-        Quiz(String i, String t, String d){ icon=i; title=t; desc=d; }
-    }
     static class Hist {
-        String icon, title, acertos, percent, data;
+        String id, icon, title, acertos, percent, data;
         boolean low;
-        Hist(String i, String t, String a, String p, String d, boolean low){
-            icon=i; title=t; acertos=a; percent=p; data=d; this.low=low;
+        Hist(String id, String i, String t, String a, String p, String d, boolean low){
+            this.id = id; icon=i; title=t; acertos=a; percent=p; data=d; this.low=low;
         }
     }
 
@@ -56,155 +55,128 @@ public class DashboardActivity extends AppCompatActivity {
         txtOverallScore = findViewById(R.id.txtOverallScore);
         rvFinished = findViewById(R.id.rvFinished);
         rvInProgress = findViewById(R.id.rvInProgress);
-        lineChart = findViewById(R.id.lineChart);
-        TextView btnHistorico = findViewById(R.id.btnHistorico);
-
-        TextView btnCursos = findViewById(R.id.btnCursos);
-        TextView btnDashboard = findViewById(R.id.btnDashboard);
-        TextView btnSuporte = findViewById(R.id.btnSuporte);
-        View userInfoHeader = findViewById(R.id.userInfoHeader);
-        ImageView btnThemeToggle = findViewById(R.id.btnThemeToggle);
-
-        loadUserData();
-        updateThemeIcon(btnThemeToggle);
-
-        if (btnHistorico != null) {
-            btnHistorico.setOnClickListener(v -> {
-                startActivity(new Intent(this, GameQuizActivity.class));
-            });
-        }
-
-        // Alternar Tema
-        if (btnThemeToggle != null) {
-            btnThemeToggle.setOnClickListener(v -> {
-                int mode = AppCompatDelegate.getDefaultNightMode();
-                if (mode == AppCompatDelegate.MODE_NIGHT_YES) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                } else {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                }
-                recreate();
-            });
-        }
-
-        // Navegação
-        if (btnCursos != null) {
-            btnCursos.setOnClickListener(v -> {
-                startActivity(new Intent(this, RoadmapActivity.class));
-            });
-        }
-
-        if (userInfoHeader != null) {
-            userInfoHeader.setOnClickListener(v -> {
-                startActivity(new Intent(this, GerenciarUser.class));
-            });
-        }
-
-        if (userAvatar != null) {
-            userAvatar.setOnClickListener(v -> {
-                startActivity(new Intent(this, GerenciarUser.class));
-            });
-        }
-
-        if (btnDashboard != null) {
-            btnDashboard.setOnClickListener(v -> {
-                Toast.makeText(this, "Você já está na Dashboard", Toast.LENGTH_SHORT).show();
-            });
-        }
-
-        if (btnSuporte != null) {
-            btnSuporte.setOnClickListener(v -> {
-                startActivity(new Intent(this, SupportActivity.class));
-            });
-        }
 
         setupRecyclerViews();
-        setupChart();
-    }
+        loadUserData();
+        loadRealRoadmaps();
 
-
-
-    private void setupChart() {
-        if (lineChart != null) {
-            List<Float> data = Arrays.asList(30f, 45f, 40f, 70f, 65f, 90f, 85f);
-            List<String> labels = Arrays.asList("Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom");
-            lineChart.setData(data, labels);
+        findViewById(R.id.btnNavRoadmap).setOnClickListener(v -> startActivity(new Intent(this, RoadmapActivity.class)));
+        findViewById(R.id.btnNavSuporte).setOnClickListener(v -> startActivity(new Intent(this, SupportActivity.class)));
+        findViewById(R.id.userInfoHeader).setOnClickListener(v -> startActivity(new Intent(this, ProfileActivity.class)));
+        
+        ImageView btnThemeToggle = findViewById(R.id.btnThemeToggle);
+        if (btnThemeToggle != null) {
+            btnThemeToggle.setOnClickListener(v -> {
+                int mode = AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES ? 
+                           AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES;
+                AppCompatDelegate.setDefaultNightMode(mode);
+                recreate();
+            });
         }
     }
 
     private void setupRecyclerViews() {
-        if (rvFinished != null) {
-            rvFinished.setLayoutManager(new LinearLayoutManager(this));
-            List<Hist> finishedData = Arrays.asList(
-                    new Hist("☕", "Java Fundamentos", "10 / 10", "100%", "20/10/2023", false),
-                    new Hist("🌐", "Web Design", "8 / 10", "80%", "15/10/2023", false)
-            );
-            rvFinished.setAdapter(new HistAdapter(finishedData));
-        }
+        rvFinished.setLayoutManager(new LinearLayoutManager(this));
+        rvInProgress.setLayoutManager(new LinearLayoutManager(this));
+        finishedAdapter = new HistAdapter(fullFinishedData);
+        progressAdapter = new HistAdapter(fullProgressData);
+        rvFinished.setAdapter(finishedAdapter);
+        rvInProgress.setAdapter(progressAdapter);
+    }
 
-        if (rvInProgress != null) {
-            rvInProgress.setLayoutManager(new LinearLayoutManager(this));
-            List<Hist> progressData = Arrays.asList(
-                    new Hist("🐍", "Python para Dados", "7 / 10", "75%", "Em progresso", true),
-                    new Hist("🎨", "UI/UX Advanced", "2 / 10", "20%", "Em progresso", true)
-            );
-            rvInProgress.setAdapter(new HistAdapter(progressData));
+    private void loadRealRoadmaps() {
+        if (mAuth.getCurrentUser() == null) {
+            applyMockRoadmaps();
+            return;
         }
+        String userId = mAuth.getCurrentUser().getUid();
+
+        db.collection("users").document(userId).collection("roadmaps")
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    if (querySnapshot.isEmpty()) {
+                        applyMockRoadmaps();
+                    } else {
+                        fullProgressData.clear();
+                        fullFinishedData.clear();
+                        for (DocumentSnapshot doc : querySnapshot) {
+                            String name = doc.getString("name");
+                            String icon = doc.getString("icon") != null ? doc.getString("icon") : "📍";
+                            fullProgressData.add(new Hist(doc.getId(), icon, name, "Ver trilha", "Andamento", "Ativo", true));
+                        }
+                        progressAdapter.updateData(new ArrayList<>(fullProgressData));
+                        finishedAdapter.updateData(new ArrayList<>(fullFinishedData));
+                    }
+                })
+                .addOnFailureListener(e -> applyMockRoadmaps());
+    }
+
+    private void applyMockRoadmaps() {
+        fullProgressData.clear();
+        fullFinishedData.clear();
+        
+        // Dados Mockados de exemplo
+        fullProgressData.add(new Hist("mock1", "☕", "Java Fundamentos (Mock)", "7/10", "70%", "Ativo", true));
+        fullProgressData.add(new Hist("mock2", "🚀", "Android Especialista (Mock)", "2/15", "13%", "Em breve", true));
+        
+        fullFinishedData.add(new Hist("mock3", "✅", "Lógica de Programação", "10/10", "100%", "Concluído", false));
+        
+        progressAdapter.updateData(new ArrayList<>(fullProgressData));
+        finishedAdapter.updateData(new ArrayList<>(fullFinishedData));
     }
 
     private void loadUserData() {
         if (mAuth.getCurrentUser() == null) {
-            setUnknownUser();
+            applyMockUserData();
             return;
         }
-
-        String userId = mAuth.getCurrentUser().getUid();
-        db.collection("user").document(userId).get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null && task.getResult().exists()) {
-                        DocumentSnapshot doc = task.getResult();
-                        String name = doc.getString("fullname");
-                        String role = doc.getString("role");
-
-                        if (userName != null) {
-                            if (name != null && !name.isEmpty()) {
-                                userName.setText(name);
-                                if (userAvatar != null) {
-                                    userAvatar.setText(String.valueOf(name.charAt(0)).toUpperCase());
-                                }
-                            } else {
-                                userName.setText("Unknown");
-                                if (userAvatar != null) userAvatar.setText("?");
-                            }
+        String uid = mAuth.getCurrentUser().getUid();
+        
+        // Tenta buscar na coleção 'user' (singular) conforme snapshot
+        db.collection("user").document(uid).get()
+            .addOnSuccessListener(doc -> {
+                if (doc.exists()) {
+                    updateUserUI(doc);
+                } else {
+                    // Tenta 'users' (plural) se não achar em 'user'
+                    db.collection("users").document(uid).get().addOnSuccessListener(doc2 -> {
+                        if (doc2.exists()) {
+                            updateUserUI(doc2);
+                        } else {
+                            applyMockUserData();
                         }
-
-                        if (userRole != null) {
-                            if (role != null && !role.isEmpty()) {
-                                userRole.setText(role);
-                            } else {
-                                userRole.setText("Bugado");
-                            }
-                        }
-                    } else {
-                        setUnknownUser();
-                    }
-                });
+                    }).addOnFailureListener(e -> applyMockUserData());
+                }
+            })
+            .addOnFailureListener(e -> applyMockUserData());
     }
 
-    private void setUnknownUser() {
-        if (userName != null) userName.setText("Unknown");
-        if (userRole != null) userRole.setText("Bugado");
-        if (userAvatar != null) userAvatar.setText("?");
-    }
-
-    private void updateThemeIcon(ImageView btn) {
-        if (btn == null) return;
-        int mode = AppCompatDelegate.getDefaultNightMode();
-        if (mode == AppCompatDelegate.MODE_NIGHT_YES) {
-            btn.setImageResource(R.drawable.ic_sun);
-        } else {
-            btn.setImageResource(R.drawable.ic_moon);
+    private void updateUserUI(DocumentSnapshot doc) {
+        String name = doc.getString("fullname");
+        if (name == null) name = doc.getString("name");
+        
+        String role = doc.getString("role");
+        if (role == null) role = doc.getString("cargo");
+        if (role == null) role = doc.getString("position");
+        
+        if (userName != null) userName.setText(name != null ? name : "Usuário");
+        if (userRole != null) userRole.setText(role != null ? role : "Explorador");
+        if (userAvatar != null && name != null && !name.isEmpty()) {
+            userAvatar.setText(name.substring(0,1).toUpperCase());
         }
+    }
+
+    private void applyMockUserData() {
+        if (userName != null) userName.setText("Usuário Teste");
+        if (userRole != null) userRole.setText("Desenvolvedor Mock");
+        if (userAvatar != null) userAvatar.setText("U");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadRealRoadmaps();
     }
 
     static class HistAdapter extends RecyclerView.Adapter<HistAdapter.VH> {
@@ -220,15 +192,18 @@ public class DashboardActivity extends AppCompatActivity {
             h.acertos.setText(x.acertos);
             h.percent.setText(x.percent);
             h.data.setText(x.data);
-            if (x.low){
-                h.percent.setBackgroundResource(R.drawable.bg_badge_orange);
-                h.percent.setTextColor(0xFFF59E0B);
-            } else {
-                h.percent.setBackgroundResource(R.drawable.bg_badge_green);
-                h.percent.setTextColor(0xFF10B981);
-            }
+            h.itemView.setOnClickListener(v -> {
+                Intent intent = new Intent(v.getContext(), RoadmapActivity.class);
+                intent.putExtra("roadmapId", x.id); // Passa o ID para abrir a trilha certa
+                v.getContext().startActivity(intent);
+            });
         }
         @Override public int getItemCount(){ return data.size(); }
+        public void updateData(List<Hist> newData) {
+            this.data.clear();
+            this.data.addAll(newData);
+            notifyDataSetChanged();
+        }
         static class VH extends RecyclerView.ViewHolder {
             TextView icon,title,acertos,percent,data;
             VH(View v){

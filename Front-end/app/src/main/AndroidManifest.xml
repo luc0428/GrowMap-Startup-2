@@ -46,6 +46,14 @@
             android:name=".SupportActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ManagerDashboardActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

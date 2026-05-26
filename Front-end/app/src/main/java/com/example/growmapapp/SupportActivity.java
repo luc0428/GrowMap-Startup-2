@@ -44,7 +44,7 @@ public class SupportActivity extends AppCompatActivity {
     private List<ChatMessage> messages;
     private EditText etMessage;
     private ImageButton btnSendMessage;
-    private TextView userAvatar;
+    private TextView userAvatar, userName, userRole;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private GenerativeModelFutures model;
@@ -62,6 +62,8 @@ public class SupportActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         userAvatar = findViewById(R.id.userAvatar);
+        userName = findViewById(R.id.userName);
+        userRole = findViewById(R.id.userRole);
 
         loadUserData();
         setupNavbar();
@@ -75,8 +77,21 @@ public class SupportActivity extends AppCompatActivity {
             db.collection("user").document(uid).get().addOnSuccessListener(doc -> {
                 if (doc.exists()) {
                     String name = doc.getString("fullname");
-                    if (name != null && !name.isEmpty() && userAvatar != null) {
-                        userAvatar.setText(String.valueOf(name.charAt(0)).toUpperCase());
+                    String role = doc.getString("role");
+                    
+                    if (name != null && !name.isEmpty()) {
+                        if (userAvatar != null) userAvatar.setText(String.valueOf(name.charAt(0)).toUpperCase());
+                        if (userName != null) userName.setText(name);
+                    }
+                    
+                    if (role != null && !role.isEmpty()) {
+                        if (userRole != null) userRole.setText(role);
+                        
+                        boolean isManager = role.equalsIgnoreCase("Gestor") || role.equalsIgnoreCase("Gerente") || role.equalsIgnoreCase("Admin");
+                        View btnManager = findViewById(R.id.btnManagerDashboard);
+                        if (btnManager != null) {
+                            btnManager.setVisibility(isManager ? View.VISIBLE : View.GONE);
+                        }
                     }
                 }
             });
@@ -84,18 +99,20 @@ public class SupportActivity extends AppCompatActivity {
     }
 
     private void setupNavbar() {
-        View btnBack = findViewById(R.id.btnBack);
-        ImageView btnThemeToggle = findViewById(R.id.btnThemeToggle);
-        View btnDashboard = findViewById(R.id.btnDashboard);
-        View btnCursos = findViewById(R.id.btnCursos);
+        View btnThemeToggle = findViewById(R.id.btnThemeToggle);
+        View btnNavHome = findViewById(R.id.btnNavHome);
+        View btnNavRoadmap = findViewById(R.id.btnNavRoadmap);
+        View btnManagerDashboard = findViewById(R.id.btnManagerDashboard);
         
         if (userAvatar != null) {
-            userAvatar.setOnClickListener(v -> startActivity(new Intent(this, GerenciarUser.class)));
+            userAvatar.setOnClickListener(v -> startActivity(new Intent(this, ProfileActivity.class)));
         }
 
-        if (btnBack != null) btnBack.setOnClickListener(v -> finish());
+        if (btnManagerDashboard != null) {
+            btnManagerDashboard.setOnClickListener(v -> startActivity(new Intent(this, ManagerDashboardActivity.class)));
+        }
         
-        updateThemeIcon(btnThemeToggle);
+        updateThemeIcon((ImageView) btnThemeToggle);
 
         if (btnThemeToggle != null) {
             btnThemeToggle.setOnClickListener(v -> {
@@ -109,16 +126,16 @@ public class SupportActivity extends AppCompatActivity {
             });
         }
 
-        if (btnDashboard != null) {
-            btnDashboard.setOnClickListener(v -> {
+        if (btnNavHome != null) {
+            btnNavHome.setOnClickListener(v -> {
                 Intent intent = new Intent(this, DashboardActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
             });
         }
 
-        if (btnCursos != null) {
-            btnCursos.setOnClickListener(v -> {
+        if (btnNavRoadmap != null) {
+            btnNavRoadmap.setOnClickListener(v -> {
                 startActivity(new Intent(this, RoadmapActivity.class));
             });
         }
