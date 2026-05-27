@@ -1,6 +1,7 @@
 package com.example.growmapapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,7 +68,12 @@ public class DashboardActivity extends AppCompatActivity {
         findViewById(R.id.btnNavRoadmap).setOnClickListener(v -> startActivity(new Intent(this, RoadmapActivity.class)));
         findViewById(R.id.btnNavSuporte).setOnClickListener(v -> startActivity(new Intent(this, SupportActivity.class)));
         findViewById(R.id.userInfoHeader).setOnClickListener(v -> startActivity(new Intent(this, ProfileActivity.class)));
-        findViewById(R.id.btnManagerDashboard).setOnClickListener(v -> startActivity(new Intent(this, ManagerDashboardActivity.class)));
+        
+        View btnManager = findViewById(R.id.btnManagerDashboard);
+        if (btnManager != null) {
+            btnManager.setOnClickListener(v -> startActivity(new Intent(this, ManagerDashboardActivity.class)));
+            btnManager.setVisibility(checkIfAdmin() ? View.VISIBLE : View.GONE);
+        }
 
         ImageView btnThemeToggle = findViewById(R.id.btnThemeToggle);
         if (btnThemeToggle != null) {
@@ -199,6 +205,16 @@ public class DashboardActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         loadQuizHistory();
+        
+        View btnManager = findViewById(R.id.btnManagerDashboard);
+        if (btnManager != null) {
+            btnManager.setVisibility(checkIfAdmin() ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    private boolean checkIfAdmin() {
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        return sharedPreferences.getBoolean("isAdmin", false);
     }
 
     static class HistAdapter extends RecyclerView.Adapter<HistAdapter.VH> {

@@ -1,6 +1,7 @@
 package com.example.growmapapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -48,7 +49,9 @@ public class GerenciarUser extends AppCompatActivity {
                     if (task.isSuccessful() && task.getResult() != null && task.getResult().exists()) {
                         String name = task.getResult().getString("fullname");
                         String role = task.getResult().getString("role");
-                        String email = task.getResult().getString("email");
+                        String cargo = task.getResult().getString("cargo");
+                        String email = task.getResult().getString("gmail");
+                        if (email == null) email = task.getResult().getString("email");
 
                         TextView userName = findViewById(R.id.userName);
                         TextView userRole = findViewById(R.id.userRole);
@@ -58,7 +61,10 @@ public class GerenciarUser extends AppCompatActivity {
                         EditText etEmail = findViewById(R.id.etEmail);
 
                         if (userName != null && name != null) userName.setText(name);
-                        if (userRole != null && role != null) userRole.setText(role);
+                        
+                        String displayRole = (cargo != null && !cargo.isEmpty()) ? cargo : role;
+                        if (userRole != null && displayRole != null) userRole.setText(displayRole);
+                        
                         if (userAvatar != null && name != null && !name.isEmpty()) {
                             userAvatar.setText(String.valueOf(name.charAt(0)).toUpperCase());
                         }
@@ -66,13 +72,14 @@ public class GerenciarUser extends AppCompatActivity {
                         if (etName != null && name != null) etName.setText(name);
                         
                         if (spinnerRole != null) {
-                            String[] roles = {"Desenvolvedor", "Analista", "Gestor", "Designer", "QA"};
+                            String[] roles = {"Desenvolvedor", "Analista", "Gestor", "Designer", "QA", "Analista de TI", "Suporte"};
                             android.widget.ArrayAdapter<String> adapter = new android.widget.ArrayAdapter<>(this, android.R.layout.simple_spinner_item, roles);
                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             spinnerRole.setAdapter(adapter);
-                            if (role != null) {
+                            
+                            if (displayRole != null) {
                                 for (int i = 0; i < roles.length; i++) {
-                                    if (roles[i].equalsIgnoreCase(role)) {
+                                    if (roles[i].equalsIgnoreCase(displayRole)) {
                                         spinnerRole.setSelection(i);
                                         break;
                                     }
@@ -80,17 +87,18 @@ public class GerenciarUser extends AppCompatActivity {
                             }
                         }
                         
-                        if (etEmail != null && email != null) etEmail.setText(email);
+                        if (etEmail != null && email != null) {
+                            etEmail.setText(email);
+                            etEmail.setEnabled(false);
+                            etEmail.setAlpha(0.6f);
+                        }
                     }
                 });
     }
 
     private void setupActions() {
-        View btnBack = findViewById(R.id.btnBack);
-        if (btnBack != null) {
-            btnBack.setOnClickListener(v -> finish());
-        }
-
+        View btnBack = findViewById(R.id.userAvatar); // Reusing avatar as back or just keep standard
+        
         View btnUpdate = findViewById(R.id.btnUpdate);
         if (btnUpdate != null) {
             btnUpdate.setOnClickListener(v -> saveUserData());
@@ -102,21 +110,19 @@ public class GerenciarUser extends AppCompatActivity {
 
         EditText etName = findViewById(R.id.etName);
         android.widget.Spinner spinnerRole = findViewById(R.id.spinnerRole);
-        EditText etEmail = findViewById(R.id.etEmail);
 
         String name = etName.getText().toString().trim();
         String role = spinnerRole.getSelectedItem() != null ? spinnerRole.getSelectedItem().toString() : "";
-        String email = etEmail.getText().toString().trim();
 
-        if (name.isEmpty() || role.isEmpty() || email.isEmpty()) {
+        if (name.isEmpty() || role.isEmpty()) {
             Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show();
             return;
         }
 
         java.util.Map<String, Object> updates = new java.util.HashMap<>();
         updates.put("fullname", name);
+        updates.put("cargo", role);
         updates.put("role", role);
-        updates.put("email", email);
 
         db.collection("user").document(targetUserId).update(updates)
                 .addOnSuccessListener(aVoid -> {
@@ -153,7 +159,17 @@ public class GerenciarUser extends AppCompatActivity {
         }
 
         if (userAvatar != null) {
-            userAvatar.setOnClickListener(v -> startActivity(new Intent(this, ProfileActivity.class)));
+            userAvatar.setOnClickListener(v -> finish());
+        }
+
+        View btnManager = findViewById(R.id.btnManagerDashboard);
+        if (btnManager != null) {
+            btnManager.setOnClickListener(v -> {
+                Intent intent = new Intent(this, ManagerDashboardActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+            });
+            btnManager.setVisibility(checkIfAdmin() ? View.VISIBLE : View.GONE);
         }
 
         // Bottom Navbar Listeners
@@ -173,7 +189,7 @@ public class GerenciarUser extends AppCompatActivity {
 
         if (btnNavGestao != null) {
             btnNavGestao.setOnClickListener(v -> {
-                Toast.makeText(this, "Você já está na Gestão", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, UserListActivity.class));
             });
         }
 
@@ -192,5 +208,10 @@ public class GerenciarUser extends AppCompatActivity {
         } else {
             btn.setImageResource(R.drawable.ic_moon);
         }
+    }
+
+    private boolean checkIfAdmin() {
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        return sharedPreferences.getBoolean("isAdmin", false);
     }
 }

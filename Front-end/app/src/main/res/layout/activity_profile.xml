@@ -48,6 +48,20 @@
         </LinearLayout>
 
         <ImageView
+            android:id="@+id/btnManagerDashboard"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="6dp"
+            android:src="@drawable/ic_brain"
+            app:tint="@color/accent_cyan"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone"
+            android:contentDescription="Dashboard Gestor" />
+
+        <ImageView
             android:id="@+id/btnThemeToggle"
             android:layout_width="24dp"
             android:layout_height="24dp"
@@ -100,6 +114,15 @@
                 android:text="Analista de TI"
                 android:textColor="@color/text_secondary"
                 android:textSize="16sp"/>
+
+            <CheckBox
+                android:id="@+id/cbIsAdmin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ADM"
+                android:textColor="@color/text_primary"
+                android:buttonTint="@color/accent_cyan"
+                android:layout_marginTop="8dp"/>
 
             <!-- Estatísticas / Gráficos -->
             <TextView

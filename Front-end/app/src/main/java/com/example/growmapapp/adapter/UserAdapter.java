@@ -32,7 +32,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         } else {
             text = text.toLowerCase();
             for (User item : userListFull) {
-                if (item.getFullname().toLowerCase().contains(text) || item.getGmail().toLowerCase().contains(text)) {
+                if (item.getFullname().toLowerCase().contains(text) || 
+                    item.getGmail().toLowerCase().contains(text) ||
+                    (item.getCargo() != null && item.getCargo().toLowerCase().contains(text))) {
                     userList.add(item);
                 }
             }
@@ -51,7 +53,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
         User user = userList.get(position);
         holder.tvName.setText(user.getFullname());
-        holder.tvRole.setText(user.getRole());
+        
+        // Prioritizes 'cargo', falls back to 'role'
+        String displayRole = (user.getCargo() != null && !user.getCargo().isEmpty()) ? user.getCargo() : user.getRole();
+        holder.tvRole.setText(displayRole);
+
         holder.tvEmail.setText(user.getGmail());
         holder.progressBar.setProgress(user.getPercentage());
         holder.tvPercentage.setText(user.getPercentage() + "%");

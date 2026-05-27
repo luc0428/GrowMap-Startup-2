@@ -1,6 +1,7 @@
 package com.example.growmapapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -81,6 +82,18 @@ public class ManagerDashboardActivity extends AppCompatActivity {
         if (userAvatarView != null) {
             userAvatarView.setOnClickListener(v -> startActivity(new Intent(this, ProfileActivity.class)));
         }
+
+        View btnManager = findViewById(R.id.btnManagerDashboard);
+        if (btnManager != null) {
+            btnManager.setVisibility(checkIfAdmin() ? View.VISIBLE : View.GONE);
+            // On this activity, it can just show a toast or do nothing
+            btnManager.setOnClickListener(v -> Toast.makeText(this, "Você já está no Dashboard do Gestor", Toast.LENGTH_SHORT).show());
+        }
+    }
+
+    private boolean checkIfAdmin() {
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        return sharedPreferences.getBoolean("isAdmin", false);
     }
 
     private void loadUserData() {

@@ -1,6 +1,7 @@
 package com.example.growmapapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -83,11 +84,12 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void saveUserToFirestore(String userId, String fullName, String email, String password) {
         Log.d(TAG, "Saving user to Firestore... Collection: user, UID: " + userId);
-        User user = new User(fullName, email, password);
+        User user = new User(userId, fullName, email);
         db.collection("user").document(userId)
                 .set(user)
                 .addOnSuccessListener(aVoid -> {
                     Log.d(TAG, "Firestore: Success!");
+                    saveUserId(userId);
                     Toast.makeText(RegisterActivity.this, "Cadastro realizado com sucesso!", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                     finish();
@@ -96,5 +98,12 @@ public class RegisterActivity extends AppCompatActivity {
                     Log.e(TAG, "Firestore: Failure", e);
                     Toast.makeText(RegisterActivity.this, "Erro ao salvar dados: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    private void saveUserId(String userId) {
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("userId", userId);
+        editor.apply();
     }
 }
