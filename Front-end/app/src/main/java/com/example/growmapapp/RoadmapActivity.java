@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.growmapapp.adapter.ActivityAdapter;
+import com.example.growmapapp.adapter.LearningPathAdapter;
 import com.example.growmapapp.adapter.RoadMapAdapter;
 import com.example.growmapapp.adapter.SelectionAdapter;
 import com.example.growmapapp.adapter.TrailAdapter;
@@ -33,6 +34,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -153,23 +155,75 @@ public class RoadmapActivity extends AppCompatActivity {
     private void loadAllRoadmaps() {
         firestoreService.getAllRoadMaps().addOnSuccessListener(querySnapshot -> {
             List<RoadMap> list = querySnapshot.toObjects(RoadMap.class);
-            // Clicking the card or the pencil opens the edit modal (Removed drill-down)
-            rvSteps.setAdapter(new RoadMapAdapter(list, this::showRoadmapFormDialog, this::showRoadmapFormDialog, this::deleteRoadmap));
+            rvSteps.setAdapter(new RoadMapAdapter(list, this::viewRoadmap, this::showRoadmapFormDialog, this::deleteRoadmap));
+        });
+    }
+
+    private void viewRoadmap(RoadMap roadMap) {
+        tvJornadaTitle.setText("Trilhas de: " + roadMap.getTitle());
+        firestoreService.getTrailsByRoadMap(roadMap.getId()).addOnSuccessListener(querySnapshot -> {
+            List<MapTrail> pivots = querySnapshot.toObjects(MapTrail.class);
+            pivots.sort(Comparator.comparingInt(MapTrail::getOrder));
+            
+            List<Trail> trails = new ArrayList<>();
+            AtomicInteger count = new AtomicInteger(pivots.size());
+            if (pivots.isEmpty()) {
+                rvSteps.setAdapter(null);
+                return;
+            }
+
+            for (MapTrail p : pivots) {
+                firestoreService.getTrail(p.getTrailId()).addOnSuccessListener(doc -> {
+                    if (doc.exists()) trails.add(doc.toObject(Trail.class));
+                    if (count.decrementAndGet() == 0) {
+                        rvSteps.setAdapter(new TrailAdapter(trails, this::viewTrail, this::showTrailFormDialog, this::deleteTrail));
+                    }
+                });
+            }
         });
     }
 
     private void loadAllTrails() {
         firestoreService.getAllTrails().addOnSuccessListener(querySnapshot -> {
             List<Trail> list = querySnapshot.toObjects(Trail.class);
-            // Clicking the card or the pencil opens the edit modal (Removed drill-down)
-            rvSteps.setAdapter(new TrailAdapter(list, this::showTrailFormDialog, this::showTrailFormDialog, this::deleteTrail));
+            rvSteps.setAdapter(new TrailAdapter(list, this::viewTrail, this::showTrailFormDialog, this::deleteTrail));
         });
+    }
+
+    private void viewTrail(Trail trail) {
+        tvJornadaTitle.setText("Jornada: " + trail.getTitle());
+        firestoreService.getActivitiesByTrail(trail.getId()).addOnSuccessListener(querySnapshot -> {
+            List<ActivityTrail> pivots = querySnapshot.toObjects(ActivityTrail.class);
+            pivots.sort(Comparator.comparingInt(ActivityTrail::getOrder));
+
+            List<Activity> activities = new ArrayList<>();
+            AtomicInteger count = new AtomicInteger(pivots.size());
+            if (pivots.isEmpty()) {
+                rvSteps.setAdapter(null);
+                return;
+            }
+
+            for (ActivityTrail p : pivots) {
+                firestoreService.getActivity(p.getActivityId()).addOnSuccessListener(doc -> {
+                    if (doc.exists()) activities.add(doc.toObject(Activity.class));
+                    if (count.decrementAndGet() == 0) {
+                        rvSteps.setAdapter(new LearningPathAdapter(activities, this::startQuizActivity));
+                    }
+                });
+            }
+        });
+    }
+
+    private void startQuizActivity(Activity activity) {
+        Intent intent = new Intent(this, GameQuizActivity.class);
+        intent.putExtra("activityId", activity.getId());
+        startActivity(intent);
     }
 
     private void loadAllActivities() {
         firestoreService.getAllActivities().addOnSuccessListener(querySnapshot -> {
             List<Activity> list = querySnapshot.toObjects(Activity.class);
-            rvSteps.setAdapter(new ActivityAdapter(list, this::showActivityFormDialog, this::showActivityFormDialog, this::deleteActivity));
+            rvSteps.setAdapter(new ActivityAdapter(list, this::startQuizActivity, this::showActivityFormDialog, this::deleteActivity));
         });
     }
 
@@ -471,7 +525,6 @@ public class RoadmapActivity extends AppCompatActivity {
                 });
             } else {
                 firestoreService.updateTrail(t).addOnSuccessListener(aVoid -> {
-                    // Sync Pivot: Clear and Rebuild
                     firestoreService.getActivitiesByTrail(trail.getId()).addOnSuccessListener(qs -> {
                         for (DocumentSnapshot doc : qs) firestoreService.deleteActivityTrail(doc.getId());
                         for (int i = 0; i < selectedActivities.size(); i++) {
@@ -491,11 +544,24 @@ public class RoadmapActivity extends AppCompatActivity {
     private void showActivityFormDialog(Activity activity) {
         BottomSheetDialog dialog = new BottomSheetDialog(this);
         View view = getLayoutInflater().inflate(R.layout.dialog_form_create_activity, null);
-        
+
         TextView tvDialogTitle = view.findViewById(R.id.tvDialogTitle);
         EditText etName = view.findViewById(R.id.etActivityName);
         EditText etDesc = view.findViewById(R.id.etActivityDesc);
+        RecyclerView rvQuestions = view.findViewById(R.id.rvQuestions);
+        TextView btnAddQuestion = view.findViewById(R.id.btnAddQuestion);
         TextView btnSave = view.findViewById(R.id.btnSaveActivity);
+
+        List<Question> questionsList = new ArrayList<>();
+        if (activity != null && activity.getQuestions() != null) {
+            questionsList.addAll(activity.getQuestions());
+        } else if (activity == null) {
+            questionsList.add(new Question("", Arrays.asList("", "", "", ""), 0));
+        }
+
+        com.example.growmapapp.adapter.QuestionFormAdapter adapter = new com.example.growmapapp.adapter.QuestionFormAdapter(questionsList);
+        rvQuestions.setLayoutManager(new LinearLayoutManager(this));
+        rvQuestions.setAdapter(adapter);
 
         if (activity != null) {
             tvDialogTitle.setText("Editar Atividade");
@@ -504,14 +570,22 @@ public class RoadmapActivity extends AppCompatActivity {
             btnSave.setText("Salvar Alterações");
         }
 
+        btnAddQuestion.setOnClickListener(v -> {
+            questionsList.add(new Question("", Arrays.asList("", "", "", ""), 0));
+            adapter.notifyItemInserted(questionsList.size() - 1);
+        });
+
         view.findViewById(R.id.btnCancel).setOnClickListener(v -> dialog.dismiss());
 
         btnSave.setOnClickListener(v -> {
             String name = etName.getText().toString().trim();
             if (name.isEmpty()) return;
+
             Activity act = activity != null ? activity : new Activity();
             act.setTitle(name);
             act.setDescription(etDesc.getText().toString());
+            act.setQuestions(questionsList);
+            act.setType("quiz");
 
             if (activity == null) {
                 firestoreService.addActivity(act).addOnSuccessListener(ref -> {
