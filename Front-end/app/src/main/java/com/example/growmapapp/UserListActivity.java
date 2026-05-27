@@ -1,7 +1,6 @@
 package com.example.growmapapp;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -58,7 +57,44 @@ public class UserListActivity extends AppCompatActivity {
 
         setupNavbar();
         setupSearch();
+        loadLoggedUserInfo();
         loadUsers();
+    }
+
+    private void loadLoggedUserInfo() {
+        if (mAuth.getCurrentUser() != null) {
+            String uid = mAuth.getCurrentUser().getUid();
+            db.collection("user").document(uid).get().addOnSuccessListener(doc -> {
+                if (doc.exists()) {
+                    User user = doc.toObject(User.class);
+                    if (user != null) {
+                        TextView tvName = findViewById(R.id.userName);
+                        TextView tvRole = findViewById(R.id.userRole);
+                        TextView tvAvatar = findViewById(R.id.userAvatar);
+                        
+                        getSharedPreferences("UserPrefs", MODE_PRIVATE).edit().putBoolean("isAdmin", user.isAdm()).apply();
+                        refreshManagerButton();
+
+                        if (user.getFullname() != null) {
+                            if (tvName != null) tvName.setText(user.getFullname());
+                            if (tvAvatar != null && !user.getFullname().isEmpty()) {
+                                tvAvatar.setText(String.valueOf(user.getFullname().charAt(0)).toUpperCase());
+                            }
+                        }
+                        
+                        String displayRole = (user.getCargo() != null && !user.getCargo().isEmpty()) ? user.getCargo() : user.getRole();
+                        if (tvRole != null && displayRole != null) tvRole.setText(displayRole);
+                    }
+                }
+            });
+        }
+    }
+
+    private void refreshManagerButton() {
+        View btnManager = findViewById(R.id.btnManagerDashboard);
+        if (btnManager != null) {
+            btnManager.setVisibility(checkIfAdmin() ? View.VISIBLE : View.GONE);
+        }
     }
 
     private void setupSearch() {
@@ -132,11 +168,6 @@ public class UserListActivity extends AppCompatActivity {
         }
     }
 
-    private boolean checkIfAdmin() {
-        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        return sharedPreferences.getBoolean("isAdmin", false);
-    }
-
     private void updateThemeIcon(ImageView btn) {
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             btn.setImageResource(R.drawable.ic_sun);
@@ -163,9 +194,13 @@ public class UserListActivity extends AppCompatActivity {
                 userList.addAll(userListFull);
                 adapter.notifyDataSetChanged();
             } else {
-                Toast.makeText(this, "Erro ao carregar usuários.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Erro Firestore: Verifique as Regras de Segurança no Console.", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private boolean checkIfAdmin() {
+        return getSharedPreferences("UserPrefs", MODE_PRIVATE).getBoolean("isAdmin", false);
     }
 
     static class UserListItem {
