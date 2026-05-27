@@ -20,6 +20,7 @@ public class ManagerDashboardActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private TextView userName, userRole, userAvatar;
+    private TextView tvPerformanceValue, tvGoalsValue, tvReportsValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,12 +33,48 @@ public class ManagerDashboardActivity extends AppCompatActivity {
         userName = findViewById(R.id.userName);
         userRole = findViewById(R.id.userRole);
         userAvatar = findViewById(R.id.userAvatar);
+        tvPerformanceValue = findViewById(R.id.tvPerformanceValue);
+        tvGoalsValue = findViewById(R.id.tvGoalsValue);
+        tvReportsValue = findViewById(R.id.tvReportsValue);
 
         setupNavbar();
         loadUserData();
         setupDashboardCards();
+        loadDashboardStats();
         setupCharts();
         setupReports();
+    }
+
+    private void loadDashboardStats() {
+        // Busca Desempenho Médio e Total de Relatórios
+        db.collection("quiz_results").get()
+            .addOnSuccessListener(querySnapshots -> {
+                if (!querySnapshots.isEmpty()) {
+                    long totalScore = 0;
+                    int count = querySnapshots.size();
+                    for (DocumentSnapshot doc : querySnapshots) {
+                        Long score = doc.getLong("score");
+                        if (score != null) totalScore += score;
+                    }
+                    int avg = (int) (totalScore / count);
+                    if (tvPerformanceValue != null) tvPerformanceValue.setText(avg + "%");
+                    if (tvReportsValue != null) tvReportsValue.setText(String.valueOf(count));
+                } else {
+                    if (tvPerformanceValue != null) tvPerformanceValue.setText("0%");
+                    if (tvReportsValue != null) tvReportsValue.setText("0");
+                }
+            });
+
+        // Busca Metas (Simulado ou de uma coleção específica)
+        db.collection("stats").document("goals").get()
+            .addOnSuccessListener(doc -> {
+                if (doc.exists()) {
+                    String goals = doc.getString("current_goal_status");
+                    if (tvGoalsValue != null && goals != null) tvGoalsValue.setText(goals);
+                } else {
+                    if (tvGoalsValue != null) tvGoalsValue.setText("85%"); // Mock fallback
+                }
+            });
     }
 
     private void setupNavbar() {
@@ -123,6 +160,27 @@ public class ManagerDashboardActivity extends AppCompatActivity {
         if (cardUsers != null) {
             cardUsers.setOnClickListener(v -> {
                 startActivity(new Intent(this, UserListActivity.class));
+            });
+        }
+
+        View cardPerformance = findViewById(R.id.cardPerformance);
+        if (cardPerformance != null) {
+            cardPerformance.setOnClickListener(v -> {
+                Toast.makeText(this, "Detalhes de Desempenho em breve", Toast.LENGTH_SHORT).show();
+            });
+        }
+
+        View cardGoals = findViewById(R.id.cardGoals);
+        if (cardGoals != null) {
+            cardGoals.setOnClickListener(v -> {
+                Toast.makeText(this, "Gestão de Metas em breve", Toast.LENGTH_SHORT).show();
+            });
+        }
+
+        View cardReports = findViewById(R.id.cardReports);
+        if (cardReports != null) {
+            cardReports.setOnClickListener(v -> {
+                Toast.makeText(this, "Relatórios detalhados em breve", Toast.LENGTH_SHORT).show();
             });
         }
     }

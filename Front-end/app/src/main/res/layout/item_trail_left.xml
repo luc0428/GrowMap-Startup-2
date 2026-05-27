@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="16dp">
+
+    <LinearLayout
+        android:id="@+id/stepCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.4"
+        android:background="@drawable/bg_card_alt"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="12dp"
+        android:clickable="true"
+        android:focusable="true">
+        <TextView
+            android:id="@+id/stepIconEmoji"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:text="📝"
+            android:gravity="center"
+            android:textSize="20sp"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/stepTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Título da Tarefa"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"
+                android:textSize="13sp"/>
+            <TextView
+                android:id="@+id/stepStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Disponível"
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="12dp">
+        <ProgressBar
+            android:id="@+id/stepProgress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:progressDrawable="@drawable/bg_donut"
+            android:max="100"
+            android:progress="0" />
+        <TextView
+            android:id="@+id/stepNodeIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_avatar"
+            android:backgroundTint="@color/bg_card_alt"
+            android:gravity="center"
+            android:text="1"
+            android:textColor="@color/accent_cyan"
+            android:textStyle="bold"/>
+    </FrameLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+</LinearLayout>

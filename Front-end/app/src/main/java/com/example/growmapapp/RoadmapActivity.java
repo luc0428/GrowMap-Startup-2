@@ -191,27 +191,10 @@ public class RoadmapActivity extends AppCompatActivity {
     }
 
     private void viewTrail(Trail trail) {
-        tvJornadaTitle.setText("Jornada: " + trail.getTitle());
-        firestoreService.getActivitiesByTrail(trail.getId()).addOnSuccessListener(querySnapshot -> {
-            List<ActivityTrail> pivots = querySnapshot.toObjects(ActivityTrail.class);
-            pivots.sort(Comparator.comparingInt(ActivityTrail::getOrder));
-
-            List<Activity> activities = new ArrayList<>();
-            AtomicInteger count = new AtomicInteger(pivots.size());
-            if (pivots.isEmpty()) {
-                rvSteps.setAdapter(null);
-                return;
-            }
-
-            for (ActivityTrail p : pivots) {
-                firestoreService.getActivity(p.getActivityId()).addOnSuccessListener(doc -> {
-                    if (doc.exists()) activities.add(doc.toObject(Activity.class));
-                    if (count.decrementAndGet() == 0) {
-                        rvSteps.setAdapter(new LearningPathAdapter(activities, this::startQuizActivity));
-                    }
-                });
-            }
-        });
+        Intent intent = new Intent(this, RoadmapTrailActivity.class);
+        intent.putExtra("trailId", trail.getId());
+        intent.putExtra("trailTitle", trail.getTitle());
+        startActivity(intent);
     }
 
     private void startQuizActivity(Activity activity) {

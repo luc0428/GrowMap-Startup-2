@@ -43,6 +43,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".RoadmapTrailActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".SupportActivity"
             android:exported="false" />
 

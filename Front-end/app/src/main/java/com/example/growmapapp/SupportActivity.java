@@ -154,9 +154,10 @@ public class SupportActivity extends AppCompatActivity {
             android.webkit.WebSettings webSettings = webView.getSettings();
             webSettings.setJavaScriptEnabled(true);
             webSettings.setDomStorageEnabled(true);
+            webSettings.setDatabaseEnabled(true);
             
-            // Aqui você deve colocar a URL fornecida pelo Botpress quando publicar seu bot
-            webView.loadUrl("https://mediafiles.botpress.cloud/YOUR_BOT_ID/webchat/bot.html");
+            // Link do Botpress fornecido
+            webView.loadUrl("https://cdn.botpress.cloud/webchat/v3.6/shareable.html?configUrl=https://files.bpcontent.cloud/2026/04/14/22/20260414223338-E7B1VKWP.json");
         }
     }
 
