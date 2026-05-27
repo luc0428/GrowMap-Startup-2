@@ -10,6 +10,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
@@ -105,11 +106,19 @@ public class FirestoreService {
     }
 
     public Task<QuerySnapshot> getTrailsByRoadMap(String roadMapId) {
-        return db.collection(COL_MAP_TRAIL).whereEqualTo("roadMapId", roadMapId).get();
+        // REMOVED orderBy("order") to avoid index requirement errors.
+        // Manual sorting will be done in the Activity.
+        return db.collection(COL_MAP_TRAIL)
+                .whereEqualTo("roadMapId", roadMapId)
+                .get();
     }
 
     public Task<Void> deleteMapTrail(String id) {
         return db.collection(COL_MAP_TRAIL).document(id).delete();
+    }
+
+    public Task<Void> updateMapTrail(MapTrail mapTrail) {
+        return db.collection(COL_MAP_TRAIL).document(mapTrail.getId()).set(mapTrail);
     }
 
     // --- CRUD ACTIVITY_TRAIL (Pivot) ---
@@ -119,10 +128,17 @@ public class FirestoreService {
     }
 
     public Task<QuerySnapshot> getActivitiesByTrail(String trailId) {
-        return db.collection(COL_ACTIVITY_TRAIL).whereEqualTo("trailId", trailId).get();
+        // REMOVED orderBy("order") to avoid index requirement errors.
+        return db.collection(COL_ACTIVITY_TRAIL)
+                .whereEqualTo("trailId", trailId)
+                .get();
     }
 
     public Task<Void> deleteActivityTrail(String id) {
         return db.collection(COL_ACTIVITY_TRAIL).document(id).delete();
+    }
+
+    public Task<Void> updateActivityTrail(ActivityTrail activityTrail) {
+        return db.collection(COL_ACTIVITY_TRAIL).document(activityTrail.getId()).set(activityTrail);
     }
 }

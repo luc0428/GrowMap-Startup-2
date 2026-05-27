@@ -3,6 +3,7 @@ package com.example.growmapapp.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,15 +17,23 @@ import java.util.List;
 public class RoadMapAdapter extends RecyclerView.Adapter<RoadMapAdapter.RoadMapViewHolder> {
 
     private List<RoadMap> roadMapList;
-    private OnItemClickListener listener;
+    private OnItemClickListener navigateListener;
+    private OnItemClickListener editListener;
+    private OnDeleteClickListener deleteListener;
 
     public interface OnItemClickListener {
         void onItemClick(RoadMap roadMap);
     }
 
-    public RoadMapAdapter(List<RoadMap> roadMapList, OnItemClickListener listener) {
+    public interface OnDeleteClickListener {
+        void onDeleteClick(RoadMap roadMap);
+    }
+
+    public RoadMapAdapter(List<RoadMap> roadMapList, OnItemClickListener navigateListener, OnItemClickListener editListener, OnDeleteClickListener deleteListener) {
         this.roadMapList = roadMapList;
-        this.listener = listener;
+        this.navigateListener = navigateListener;
+        this.editListener = editListener;
+        this.deleteListener = deleteListener;
     }
 
     @NonNull
@@ -39,7 +48,10 @@ public class RoadMapAdapter extends RecyclerView.Adapter<RoadMapAdapter.RoadMapV
         RoadMap roadMap = roadMapList.get(position);
         holder.tvTitle.setText(roadMap.getTitle());
         holder.tvDescription.setText(roadMap.getDescription());
-        holder.itemView.setOnClickListener(v -> listener.onItemClick(roadMap));
+        
+        holder.btnEdit.setOnClickListener(v -> editListener.onItemClick(roadMap));
+        holder.btnDelete.setOnClickListener(v -> deleteListener.onDeleteClick(roadMap));
+        holder.itemView.setOnClickListener(v -> navigateListener.onItemClick(roadMap));
     }
 
     @Override
@@ -49,11 +61,14 @@ public class RoadMapAdapter extends RecyclerView.Adapter<RoadMapAdapter.RoadMapV
 
     public static class RoadMapViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle, tvDescription;
+        ImageView btnEdit, btnDelete;
 
         public RoadMapViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvItemTitle);
             tvDescription = itemView.findViewById(R.id.tvItemDescription);
+            btnEdit = itemView.findViewById(R.id.btnEditItem);
+            btnDelete = itemView.findViewById(R.id.btnDeleteItem);
         }
     }
 }

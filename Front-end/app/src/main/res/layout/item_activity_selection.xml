@@ -19,18 +19,27 @@
         android:textSize="12sp"
         android:textStyle="bold"/>
 
+    <ImageView
+        android:id="@+id/ivDragHandle"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="8dp"
+        android:src="@android:drawable/ic_menu_sort_by_size"
+        android:alpha="0.4"
+        android:contentDescription="Arrastar" />
+
     <TextView
-        android:id="@+id/tvActivityName"
+        android:id="@+id/tvSelectionName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:layout_marginStart="12dp"
-        android:text="Nome da Atividade"
+        android:text="Nome"
         android:textColor="@color/text_primary"
         android:textSize="14sp"/>
 
     <ImageView
-        android:id="@+id/btnRemoveActivity"
+        android:id="@+id/btnRemoveSelection"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:src="@android:drawable/ic_menu_close_clear_cancel"

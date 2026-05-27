@@ -75,14 +75,12 @@
         android:textSize="12sp"
         android:layout_marginBottom="8dp"/>
 
-    <LinearLayout
-        android:id="@+id/trailsContainer"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvSelectedTrails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="16dp">
-        <!-- Trilhas selecionadas aparecerão aqui -->
-    </LinearLayout>
+        android:layout_marginBottom="16dp"
+        android:nestedScrollingEnabled="false" />
 
     <TextView
         android:id="@+id/btnAddTrail"

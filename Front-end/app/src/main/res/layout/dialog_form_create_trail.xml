@@ -75,14 +75,12 @@
         android:textSize="12sp"
         android:layout_marginBottom="8dp"/>
 
-    <LinearLayout
-        android:id="@+id/activitiesContainer"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvSelectedActivities"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="16dp">
-        <!-- Atividades selecionadas aparecerão aqui -->
-    </LinearLayout>
+        android:layout_marginBottom="16dp"
+        android:nestedScrollingEnabled="false" />
 
     <TextView
         android:id="@+id/btnAddActivity"

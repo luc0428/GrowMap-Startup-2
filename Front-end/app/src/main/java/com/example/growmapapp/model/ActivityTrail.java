@@ -10,12 +10,16 @@ public class ActivityTrail {
     private String id;
     private String activityId;
     private String trailId;
+    private boolean completed;
+    private int order;
 
     public ActivityTrail() {}
 
-    public ActivityTrail(String activityId, String trailId) {
+    public ActivityTrail(String activityId, String trailId, boolean completed, int order) {
         this.activityId = activityId;
         this.trailId = trailId;
+        this.completed = completed;
+        this.order = order;
     }
 
     public String getId() { return id; }
@@ -26,4 +30,10 @@ public class ActivityTrail {
 
     public String getTrailId() { return trailId; }
     public void setTrailId(String trailId) { this.trailId = trailId; }
+
+    public boolean isCompleted() { return completed; }
+    public void setCompleted(boolean completed) { this.completed = completed; }
+
+    public int getOrder() { return order; }
+    public void setOrder(int order) { this.order = order; }
 }
