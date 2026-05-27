@@ -1,45 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="16dp"
-    android:gravity="center_vertical">
-
-    <View
-        android:id="@+id/stepStatus"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:background="@android:color/holo_green_light" />
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/bg_card_alt">
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginStart="16dp"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:background="?attr/selectableItemBackground">
 
-        <TextView
-            android:id="@+id/tvStepTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Roadmap Step"
-            android:textColor="@color/text_primary"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+        <!-- Status Indicator Ring -->
+        <FrameLayout
+            android:layout_width="28dp"
+            android:layout_height="28dp">
+            <View
+                android:id="@+id/stepStatusBackground"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_avatar"
+                android:backgroundTint="@color/text_muted"
+                android:alpha="0.2"/>
+            <ImageView
+                android:id="@+id/stepStatusIcon"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_moon"
+                app:tint="@color/text_muted"/>
+        </FrameLayout>
 
-        <TextView
-            android:id="@+id/tvStepDescription"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Description of the step goes here."
-            android:textColor="@color/text_secondary"
-            android:textSize="14sp" />
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvStepTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Roadmap Step"
+                android:textColor="@color/text_primary"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvStepDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Description of the step goes here."
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:layout_marginTop="2dp"/>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/btnStepAction"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:padding="8dp"
+            android:src="@android:drawable/ic_media_play"
+            app:tint="@color/accent_cyan"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Start step" />
     </LinearLayout>
-
-    <ImageView
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:src="@android:drawable/ic_media_play"
-        android:contentDescription="Start step" />
-</LinearLayout>
+</androidx.cardview.widget.CardView>

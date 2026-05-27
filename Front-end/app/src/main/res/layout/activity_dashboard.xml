@@ -1,14 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/bg_dark">
 
-    <!-- Header -->
+    <!-- Top Navbar (Novo Padrão) -->
     <LinearLayout
+        android:id="@+id/topNavbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/bg_header"
@@ -17,7 +16,8 @@
         android:paddingBottom="17dp"
         android:paddingStart="17dp"
         android:paddingEnd="17dp"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:layout_alignParentTop="true">
 
         <TextView
             android:id="@+id/userAvatar"
@@ -58,38 +58,20 @@
                 android:textSize="11sp"/>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/btnDashboard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Dashboard"
-            android:textColor="@color/accent_cyan"
-            android:textSize="15sp"
-            android:layout_marginEnd="16dp"
+        <!-- Manager Dashboard Button (Sempre Visível para Visualização) -->
+        <ImageView
+            android:id="@+id/btnManagerDashboard"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="6dp"
+            android:src="@drawable/ic_brain"
+            app:tint="@color/accent_cyan"
             android:clickable="true"
-            android:focusable="true"/>
-
-        <TextView
-            android:id="@+id/btnCursos"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cursos"
-            android:textColor="@color/text_primary"
-            android:textSize="15sp"
-            android:layout_marginEnd="16dp"
-            android:clickable="true"
-            android:focusable="true"/>
-
-        <TextView
-            android:id="@+id/btnSuporte"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Suporte"
-            android:textColor="@color/text_primary"
-            android:textSize="15sp"
-            android:layout_marginEnd="16dp"
-            android:clickable="true"
-            android:focusable="true"/>
+            android:focusable="true"
+            android:visibility="visible"
+            android:contentDescription="Dashboard Gestor" />
 
         <ImageView
             android:id="@+id/btnThemeToggle"
@@ -104,9 +86,61 @@
             android:focusable="true"/>
     </LinearLayout>
 
-    <ScrollView
+    <!-- Bottom Navbar (Novo Padrão) -->
+    <LinearLayout
+        android:id="@+id/bottomNavbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/bg_header"
+        android:orientation="horizontal"
+        android:paddingVertical="22dp"
+        android:gravity="center_vertical"
+        android:elevation="8dp">
+
+        <LinearLayout
+            android:id="@+id/btnNavHome"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🏠" android:textSize="20sp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Home" android:textColor="@color/accent_cyan" android:textSize="10sp" android:textStyle="bold"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btnNavRoadmap"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🗺️" android:textSize="20sp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Roadmap" android:textColor="@color/text_secondary" android:textSize="10sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btnNavSuporte"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="💬" android:textSize="20sp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Suporte" android:textColor="@color/text_secondary" android:textSize="10sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/topNavbar"
+        android:layout_above="@id/bottomNavbar"
         android:fillViewport="true">
 
         <LinearLayout
@@ -171,30 +205,33 @@
             </LinearLayout>
 
             <!-- Seção: Em Andamento -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="@string/em_andamento"
-                android:textColor="@color/text_primary"
-                android:textStyle="bold"
-                android:textSize="16sp"/>
-
-            <EditText
-                android:id="@+id/searchInProgress"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/bg_card_darkblue"
-                android:hint="Buscar cursos em andamento..."
-                android:textColorHint="@color/text_muted"
-                android:textColor="@color/text_primary"
-                android:paddingHorizontal="16dp"
-                android:textSize="14sp"
-                android:inputType="text"
-                android:drawableStart="@android:drawable/ic_menu_search"
-                android:drawablePadding="8dp"
-                android:drawableTint="@color/text_muted"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp">
+                <TextView
+                    android:id="@+id/titleInProgress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/em_andamento"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold"
+                    android:textSize="16sp"/>
+
+                <EditText
+                    android:id="@+id/searchInProgress"
+                    android:layout_width="150dp"
+                    android:layout_height="32dp"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/bg_chat_input"
+                    android:hint="Pesquisar..."
+                    android:paddingHorizontal="10dp"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_muted"
+                    android:maxLines="1"
+                    android:inputType="text"/>
+            </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvInProgress"
@@ -204,30 +241,35 @@
                 android:nestedScrollingEnabled="false"/>
 
             <!-- Seção: Histórico -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:text="Histórico de Conclusão"
-                android:textColor="@color/text_primary"
-                android:textStyle="bold"
-                android:textSize="16sp"/>
-
-            <EditText
-                android:id="@+id/searchFinished"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/bg_card_darkblue"
-                android:hint="Buscar no histórico..."
-                android:textColorHint="@color/text_muted"
-                android:textColor="@color/text_primary"
-                android:paddingHorizontal="16dp"
-                android:textSize="14sp"
-                android:inputType="text"
-                android:drawableStart="@android:drawable/ic_menu_search"
-                android:drawablePadding="8dp"
-                android:drawableTint="@color/text_muted"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp">
+                <TextView
+                    android:id="@+id/btnHistorico"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Histórico de Conclusão"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:clickable="true"
+                    android:focusable="true"/>
+
+                <EditText
+                    android:id="@+id/searchFinished"
+                    android:layout_width="150dp"
+                    android:layout_height="32dp"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/bg_chat_input"
+                    android:hint="Pesquisar..."
+                    android:paddingHorizontal="10dp"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_muted"
+                    android:maxLines="1"
+                    android:inputType="text"/>
+            </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvFinished"
@@ -238,18 +280,11 @@
                 android:background="@drawable/bg_card_darkblue"
                 android:paddingHorizontal="12dp"/>
 
-            <!-- Seção: Estatísticas Adicionais (Descendo) -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="40dp"
-                android:background="@color/divider"
-                android:alpha="0.2"/>
-
+            <!-- Seção: Estatísticas -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="32dp"
                 android:text="Estatísticas do Setor"
                 android:textColor="@color/text_muted"
                 android:textStyle="bold"
@@ -258,7 +293,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="100dp"
                 android:layout_marginTop="12dp"
                 android:orientation="horizontal">
 
@@ -267,8 +302,9 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/bg_card_darkblue"
-                    android:padding="12dp"
-                    android:orientation="vertical">
+                    android:padding="16dp"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -279,7 +315,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/num_colaboradores"
+                        android:text="745"
                         android:textColor="@color/text_primary"
                         android:textSize="20sp"
                         android:textStyle="bold"
@@ -294,12 +330,13 @@
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:layout_marginStart="12dp"
                     android:background="@drawable/bg_card_darkblue"
                     android:padding="16dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:gravity="center_vertical">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -307,41 +344,33 @@
                         android:textColor="@color/success_green"
                         android:textStyle="bold"
                         android:textSize="12sp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="60%"
+                        android:textColor="@color/text_primary"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="4dp"/>
                     <ProgressBar
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="4dp"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="8dp"
                         android:progress="60"
                         android:progressDrawable="@drawable/progress_gradient"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="60% de engajamento"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="10sp"
-                        android:layout_marginTop="8dp"/>
                 </LinearLayout>
             </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="@string/frequencia_tarefas"
-                android:textColor="@color/text_primary"
-                android:textSize="14sp"
-                android:textStyle="bold"/>
 
             <com.example.growmapapp.LineChartView
                 android:id="@+id/lineChart"
                 android:layout_width="match_parent"
-                android:layout_height="220dp"
-                android:layout_marginTop="12dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginBottom="40dp"
                 android:background="@drawable/bg_card_darkblue"
                 android:padding="16dp"/>
 
         </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</RelativeLayout>

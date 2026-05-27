@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_dark">
+
+    <!-- Top Navbar -->
+    <LinearLayout
+        android:id="@+id/topNavbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_header"
+        android:orientation="horizontal"
+        android:paddingTop="32dp"
+        android:paddingBottom="17dp"
+        android:paddingStart="17dp"
+        android:paddingEnd="17dp"
+        android:gravity="center_vertical"
+        android:layout_alignParentTop="true">
+
+        <TextView
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_avatar"
+            android:gravity="center"
+            android:text="‹"
+            android:textColor="@color/accent_cyan"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Meu Perfil"
+                android:textColor="@color/accent_cyan"
+                android:textStyle="bold"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/btnNavDashboardText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dashboard"
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp"
+            android:layout_marginEnd="16dp"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <ImageView
+            android:id="@+id/btnThemeToggle"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_moon"
+            app:tint="@color/accent_cyan"
+            android:clickable="true"
+            android:focusable="true"/>
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/topNavbar"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:gravity="center_horizontal">
+
+            <!-- Avatar Grande -->
+            <TextView
+                android:id="@+id/profileAvatar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/bg_avatar"
+                android:gravity="center"
+                android:text="K"
+                android:textColor="@color/accent_cyan"
+                android:textSize="40sp"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"/>
+
+            <TextView
+                android:id="@+id/profileName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Kauan Davi"
+                android:textColor="@color/text_primary"
+                android:textSize="24sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/profileRole"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Analista de TI"
+                android:textColor="@color/text_secondary"
+                android:textSize="16sp"/>
+
+            <!-- Estatísticas / Gráficos -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:layout_gravity="start"
+                android:text="Progresso das Trilhas"
+                android:textColor="@color/accent_cyan"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_card_darkblue"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Java Developer"
+                        android:textColor="@color/text_primary"
+                        android:textSize="14sp"/>
+                    <TextView
+                        android:id="@+id/tvJavaPercentage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:text="75%"
+                        android:textColor="@color/accent_cyan"
+                        android:textSize="14sp"
+                        android:textStyle="bold"/>
+                </RelativeLayout>
+                <ProgressBar
+                    android:id="@+id/pbJavaDeveloper"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:progress="75"
+                    android:progressDrawable="@drawable/progress_gradient"
+                    android:layout_marginTop="8dp"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Python Fundamentals"
+                        android:textColor="@color/text_primary"
+                        android:textSize="14sp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:text="30%"
+                        android:textColor="@color/warning_orange"
+                        android:textSize="14sp"
+                        android:textStyle="bold"/>
+                </RelativeLayout>
+                <ProgressBar
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:progress="30"
+                    android:progressTint="@color/warning_orange"
+                    android:layout_marginTop="8dp"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Office 365 Mastery"
+                        android:textColor="@color/text_primary"
+                        android:textSize="14sp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:text="10%"
+                        android:textColor="@color/purple"
+                        android:textSize="14sp"
+                        android:textStyle="bold"/>
+                </RelativeLayout>
+                <ProgressBar
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:progress="10"
+                    android:progressTint="@color/purple"
+                    android:layout_marginTop="8dp"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:layout_gravity="start"
+                android:text="Desempenho Semanal"
+                android:textColor="@color/accent_cyan"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+
+            <com.example.growmapapp.LineChartView
+                android:id="@+id/profileLineChart"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="40dp"
+                android:background="@drawable/bg_card_darkblue"
+                android:padding="16dp"/>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</RelativeLayout>

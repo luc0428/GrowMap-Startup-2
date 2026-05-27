@@ -14,4 +14,5 @@
     <color name="roadmap_panel_stroke">#1F2A44</color>
     <color name="roadmap_module_card_bg">#111A2E</color>
     <color name="roadmap_module_card_stroke">#1F2A44</color>
+    <color name="bg_card_darkblue">#1E293B</color>
 </resources>

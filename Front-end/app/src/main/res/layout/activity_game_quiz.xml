@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#050B1E">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:id="@+id/txtProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pergunta 1 de 5"
+            android:textColor="#00D9FF"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="12dp"
+            android:max="100"
+            android:progress="20"
+            android:layout_marginTop="12dp"
+            android:progressTint="#00D9FF"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:layout_marginTop="30dp"
+            android:background="#0D1630">
+
+            <TextView
+                android:id="@+id/txtQuestion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Pergunta aqui"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="30dp"/>
+
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/option1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:padding="12dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/bg_card_darkblue"/>
+
+                <RadioButton
+                    android:id="@+id/option2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:padding="12dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/bg_card_darkblue"/>
+
+                <RadioButton
+                    android:id="@+id/option3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:padding="12dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/bg_card_darkblue"/>
+
+                <RadioButton
+                    android:id="@+id/option4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:padding="12dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/bg_card_darkblue"/>
+            </RadioGroup>
+
+            <Button
+                android:id="@+id/btnNext"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="PRÓXIMA"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:layout_marginTop="30dp"
+                android:backgroundTint="#00AEEF"/>
+
+            <Button
+                android:id="@+id/btnExit"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="SAIR"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="#FF5252"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/txtResult"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:layout_marginTop="30dp"/>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

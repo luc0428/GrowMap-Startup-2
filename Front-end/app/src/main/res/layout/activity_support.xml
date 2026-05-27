@@ -1,14 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/bg_dark">
 
-    <!-- Navbar -->
+    <!-- Top Navbar (Novo Padrão) -->
     <LinearLayout
+        android:id="@+id/topNavbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/bg_header"
@@ -17,7 +16,8 @@
         android:paddingBottom="17dp"
         android:paddingStart="17dp"
         android:paddingEnd="17dp"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:layout_alignParentTop="true">
 
         <TextView
             android:id="@+id/userAvatar"
@@ -58,36 +58,20 @@
                 android:textSize="11sp"/>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/btnDashboard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Dashboard" android:textColor="@color/text_primary"
-            android:textSize="15sp" android:layout_marginEnd="16dp"
+        <!-- Manager Dashboard Button (Visible based on permission) -->
+        <ImageView
+            android:id="@+id/btnManagerDashboard"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="6dp"
+            android:src="@drawable/ic_brain"
+            app:tint="@color/accent_cyan"
             android:clickable="true"
-            android:focusable="true"/>
-
-        <TextView
-            android:id="@+id/btnCursos"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cursos"
-            android:textColor="@color/text_primary"
-            android:textSize="15sp"
-            android:layout_marginEnd="16dp"
-            android:clickable="true"
-            android:focusable="true"/>
-
-        <TextView
-            android:id="@+id/btnSuporte"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Suporte"
-            android:textColor="@color/accent_cyan"
-            android:textSize="15sp"
-            android:layout_marginEnd="16dp"
-            android:clickable="true"
-            android:focusable="true"/>
+            android:focusable="true"
+            android:visibility="gone"
+            android:contentDescription="Dashboard Gestor" />
 
         <ImageView
             android:id="@+id/btnThemeToggle"
@@ -102,9 +86,62 @@
             android:focusable="true"/>
     </LinearLayout>
 
-    <ScrollView
+    <!-- Bottom Navbar (Novo Padrão) -->
+    <LinearLayout
+        android:id="@+id/bottomNavbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/bg_header"
+        android:orientation="horizontal"
+        android:paddingVertical="22dp"
+        android:gravity="center_vertical"
+        android:elevation="8dp">
+
+        <LinearLayout
+            android:id="@+id/btnNavHome"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🏠" android:textSize="20sp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Home" android:textColor="@color/text_secondary" android:textSize="10sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btnNavRoadmap"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🗺️" android:textSize="20sp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Roadmap" android:textColor="@color/text_secondary" android:textSize="10sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btnNavSuporte"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="💬" android:textSize="20sp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Suporte" android:textColor="@color/accent_cyan" android:textSize="10sp" android:textStyle="bold"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/topNavbar"
+        android:layout_above="@id/bottomNavbar"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -153,6 +190,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="450dp"
                 android:layout_marginTop="12dp"
+                android:layout_marginBottom="40dp"
                 android:background="@drawable/bg_card_darkblue"
                 android:orientation="vertical"
                 android:padding="8dp">
@@ -214,7 +252,6 @@
                         android:padding="10dp"/>
                 </LinearLayout>
             </LinearLayout>
-
         </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</RelativeLayout>
