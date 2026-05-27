@@ -14,14 +14,23 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import com.example.growmapapp.model.Activity;
+import com.example.growmapapp.model.ActivityTrail;
+import com.example.growmapapp.model.MapTrail;
+import com.example.growmapapp.model.RoadMap;
+import com.example.growmapapp.model.Trail;
+import com.example.growmapapp.service.FirestoreService;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RoadmapActivity extends AppCompatActivity {
 
-    private List<String> selectedTrails = new ArrayList<>();
+    private List<Trail> selectedTrails = new ArrayList<>();
+    private List<Activity> selectedActivities = new ArrayList<>();
+    private FirestoreService firestoreService;
     
     // Estados do Roadmap (Simulando persistência)
     private boolean isJourneyStarted = false;
@@ -32,6 +41,9 @@ public class RoadmapActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_roadmap);
+        
+        firestoreService = new FirestoreService();
+
         setupNavbar();
         setupCreateButton();
         updateRoadmapUI();
@@ -48,24 +60,29 @@ public class RoadmapActivity extends AppCompatActivity {
         BottomSheetDialog dialog = new BottomSheetDialog(this);
         View view = getLayoutInflater().inflate(R.layout.dialog_create_roadmap, null);
         
-        // Listener para o card todo ou especificamente para o botão "Entrar"
-        View.OnClickListener createRoadmapAction = v -> {
+        // Roadmap
+        View.OnClickListener roadmapAction = v -> {
             dialog.dismiss();
             showRoadmapFormDialog();
         };
+        view.findViewById(R.id.optionCreateRoadmap).setOnClickListener(roadmapAction);
+        view.findViewById(R.id.btnEnterCreateRoadmap).setOnClickListener(roadmapAction);
         
-        view.findViewById(R.id.optionCreateRoadmap).setOnClickListener(createRoadmapAction);
-        view.findViewById(R.id.btnEnterCreateRoadmap).setOnClickListener(createRoadmapAction);
-        
-        view.findViewById(R.id.optionCreateTask).setOnClickListener(v -> {
-            Toast.makeText(this, "Criar Tarefa clicado", Toast.LENGTH_SHORT).show();
+        // Activity
+        View.OnClickListener activityAction = v -> {
             dialog.dismiss();
-        });
+            showActivityFormDialog();
+        };
+        view.findViewById(R.id.optionCreateTask).setOnClickListener(activityAction);
+        view.findViewById(R.id.btnEnterCreateTask).setOnClickListener(activityAction);
         
-        view.findViewById(R.id.optionCreateTrail).setOnClickListener(v -> {
-            Toast.makeText(this, "Criar Trilhas clicado", Toast.LENGTH_SHORT).show();
+        // Trail
+        View.OnClickListener trailAction = v -> {
             dialog.dismiss();
-        });
+            showTrailFormDialog();
+        };
+        view.findViewById(R.id.optionCreateTrail).setOnClickListener(trailAction);
+        view.findViewById(R.id.btnEnterCreateTrail).setOnClickListener(trailAction);
 
         dialog.setContentView(view);
         dialog.show();
@@ -85,34 +102,131 @@ public class RoadmapActivity extends AppCompatActivity {
         selectedTrails.clear();
 
         btnAdd.setOnClickListener(v -> {
-            // Mocking selection
-            String[] availableTrails = {"Lógica de Programação", "Java Básico", "Spring Boot", "MySQL", "React Native"};
-            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-            builder.setTitle("Selecione uma Trilha");
-            builder.setItems(availableTrails, (d, which) -> {
-                addTrailToView(container, availableTrails[which]);
+            firestoreService.getAllTrails().addOnSuccessListener(queryDocumentSnapshots -> {
+                List<Trail> trails = queryDocumentSnapshots.toObjects(Trail.class);
+                String[] trailNames = new String[trails.size()];
+                for (int i = 0; i < trails.size(); i++) trailNames[i] = trails.get(i).getTitle();
+
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+                builder.setTitle("Selecione uma Trilha");
+                builder.setItems(trailNames, (d, which) -> {
+                    addTrailToView(container, trails.get(which));
+                });
+                builder.show();
             });
-            builder.show();
         });
 
         btnCancel.setOnClickListener(v -> dialog.dismiss());
 
         btnSave.setOnClickListener(v -> {
             String name = etName.getText().toString();
+            String desc = etDesc.getText().toString();
             if (name.isEmpty()) {
                 Toast.makeText(this, "Informe o nome do Roadmap", Toast.LENGTH_SHORT).show();
                 return;
             }
-            Toast.makeText(this, "Roadmap '" + name + "' criado com " + selectedTrails.size() + " trilhas!", Toast.LENGTH_LONG).show();
-            dialog.dismiss();
+
+            RoadMap roadMap = new RoadMap(name, desc);
+            firestoreService.addRoadMap(roadMap).addOnSuccessListener(docRef -> {
+                String roadMapId = docRef.getId();
+                // Save Pivot relations
+                for (Trail t : selectedTrails) {
+                    firestoreService.addMapTrail(new MapTrail(roadMapId, t.getId()));
+                }
+                Toast.makeText(this, "Roadmap criado com sucesso!", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            });
         });
 
         dialog.setContentView(view);
         dialog.show();
     }
 
-    private void addTrailToView(LinearLayout container, String trailName) {
-        selectedTrails.add(trailName);
+    private void showTrailFormDialog() {
+        BottomSheetDialog dialog = new BottomSheetDialog(this);
+        View view = getLayoutInflater().inflate(R.layout.dialog_form_create_trail, null);
+        
+        EditText etName = view.findViewById(R.id.etTrailName);
+        EditText etDesc = view.findViewById(R.id.etTrailDesc);
+        LinearLayout container = view.findViewById(R.id.activitiesContainer);
+        View btnAdd = view.findViewById(R.id.btnAddActivity);
+        View btnSave = view.findViewById(R.id.btnSaveTrail);
+        View btnCancel = view.findViewById(R.id.btnCancel);
+
+        selectedActivities.clear();
+
+        btnAdd.setOnClickListener(v -> {
+            firestoreService.getAllActivities().addOnSuccessListener(queryDocumentSnapshots -> {
+                List<Activity> activities = queryDocumentSnapshots.toObjects(Activity.class);
+                String[] activityNames = new String[activities.size()];
+                for (int i = 0; i < activities.size(); i++) activityNames[i] = activities.get(i).getTitle();
+
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+                builder.setTitle("Selecione uma Atividade");
+                builder.setItems(activityNames, (d, which) -> {
+                    addActivityToView(container, activities.get(which));
+                });
+                builder.show();
+            });
+        });
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        btnSave.setOnClickListener(v -> {
+            String name = etName.getText().toString();
+            String desc = etDesc.getText().toString();
+            if (name.isEmpty()) {
+                Toast.makeText(this, "Informe o nome da Trilha", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Trail trail = new Trail(name, desc);
+            firestoreService.addTrail(trail).addOnSuccessListener(docRef -> {
+                String trailId = docRef.getId();
+                for (Activity a : selectedActivities) {
+                    firestoreService.addActivityTrail(new ActivityTrail(a.getId(), trailId));
+                }
+                Toast.makeText(this, "Trilha criada com sucesso!", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            });
+        });
+
+        dialog.setContentView(view);
+        dialog.show();
+    }
+
+    private void showActivityFormDialog() {
+        BottomSheetDialog dialog = new BottomSheetDialog(this);
+        View view = getLayoutInflater().inflate(R.layout.dialog_form_create_activity, null);
+        
+        EditText etName = view.findViewById(R.id.etActivityName);
+        EditText etDesc = view.findViewById(R.id.etActivityDesc);
+        View btnSave = view.findViewById(R.id.btnSaveActivity);
+        View btnCancel = view.findViewById(R.id.btnCancel);
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        btnSave.setOnClickListener(v -> {
+            String name = etName.getText().toString();
+            String desc = etDesc.getText().toString();
+            if (name.isEmpty()) {
+                Toast.makeText(this, "Informe o nome da Atividade", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Activity activity = new Activity(name, desc);
+            firestoreService.addActivity(activity).addOnSuccessListener(docRef -> {
+                Toast.makeText(this, "Atividade criada com sucesso!", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            });
+        });
+
+        dialog.setContentView(view);
+        dialog.show();
+    }
+
+    private void addTrailToView(LinearLayout container, Trail trail) {
+        selectedTrails.add(trail);
         
         View trailView = getLayoutInflater().inflate(R.layout.item_trail_selection, container, false);
         TextView tvOrder = trailView.findViewById(R.id.tvOrderNumber);
@@ -120,10 +234,10 @@ public class RoadmapActivity extends AppCompatActivity {
         View btnRemove = trailView.findViewById(R.id.btnRemoveTrail);
 
         tvOrder.setText(String.valueOf(selectedTrails.size()));
-        tvName.setText(trailName);
+        tvName.setText(trail.getTitle());
 
         btnRemove.setOnClickListener(v -> {
-            selectedTrails.remove(trailName);
+            selectedTrails.remove(trail);
             container.removeView(trailView);
             updateOrderNumbers(container);
         });
@@ -131,7 +245,37 @@ public class RoadmapActivity extends AppCompatActivity {
         container.addView(trailView);
     }
 
+    private void addActivityToView(LinearLayout container, Activity activity) {
+        selectedActivities.add(activity);
+        
+        View activityView = getLayoutInflater().inflate(R.layout.item_activity_selection, container, false);
+        TextView tvOrder = activityView.findViewById(R.id.tvOrderNumber);
+        TextView tvName = activityView.findViewById(R.id.tvActivityName);
+        View btnRemove = activityView.findViewById(R.id.btnRemoveActivity);
+
+        tvOrder.setText(String.valueOf(selectedActivities.size()));
+        tvName.setText(activity.getTitle());
+
+        btnRemove.setOnClickListener(v -> {
+            selectedActivities.remove(activity);
+            container.removeView(activityView);
+            updateActivityOrderNumbers(container);
+        });
+
+        container.addView(activityView);
+    }
+
     private void updateOrderNumbers(LinearLayout container) {
+        for (int i = 0; i < container.getChildCount(); i++) {
+            View v = container.getChildAt(i);
+            TextView tvOrder = v.findViewById(R.id.tvOrderNumber);
+            if (tvOrder != null) {
+                tvOrder.setText(String.valueOf(i + 1));
+            }
+        }
+    }
+
+    private void updateActivityOrderNumbers(LinearLayout container) {
         for (int i = 0; i < container.getChildCount(); i++) {
             View v = container.getChildAt(i);
             TextView tvOrder = v.findViewById(R.id.tvOrderNumber);
