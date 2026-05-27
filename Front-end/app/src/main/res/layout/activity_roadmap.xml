@@ -136,6 +136,19 @@
             android:paddingBottom="32dp">
 
             <!-- Back Button -->
+            <TextView
+                android:id="@+id/btnBackToDashboard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_back"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:text="‹ Voltar para o Dashboard"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                android:clickable="true"
+                android:focusable="true"/>
 
             <!-- TITLE & CREATE BUTTON -->
             <LinearLayout
@@ -168,21 +181,62 @@
                     android:paddingHorizontal="16dp" />
             </LinearLayout>
 
-            <!-- TABS (Filtro por Roadmap) -->
-            <HorizontalScrollView
+            <!-- FILTROS PRINCIPAIS -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:scrollbars="none">
+                android:orientation="horizontal"
+                android:layout_marginTop="24dp"
+                android:gravity="center">
+
                 <LinearLayout
-                    android:id="@+id/roadmapTabsContainer"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/filterRoadmaps"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingVertical="4dp">
-                    <!-- Gerado dinamicamente via Java -->
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="12dp"
+                    android:background="@drawable/bg_card_darkblue">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🗺️" android:textSize="24sp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="RoadMap" android:textColor="@android:color/white" android:textSize="10sp" android:textStyle="bold"/>
                 </LinearLayout>
-            </HorizontalScrollView>
+
+                <LinearLayout
+                    android:id="@+id/filterTrails"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="12dp"
+                    android:background="@drawable/bg_card_alt">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="📚" android:textSize="24sp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Trilhas" android:textColor="@color/text_secondary" android:textSize="10sp" android:textStyle="bold"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/filterActivities"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="12dp"
+                    android:background="@drawable/bg_card_alt">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="📝" android:textSize="24sp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tarefas" android:textColor="@color/text_secondary" android:textSize="10sp" android:textStyle="bold"/>
+                </LinearLayout>
+
+            </LinearLayout>
 
             <!-- PROGRESS SUMMARY (UX Booster) -->
             <androidx.cardview.widget.CardView

@@ -1,10 +1,8 @@
 package com.example.growmapapp.model;
 
 import com.google.firebase.firestore.DocumentId;
+import java.util.Objects;
 
-/**
- * Modelo para a coleção Trail.
- */
 public class Trail {
     @DocumentId
     private String id;
@@ -26,4 +24,17 @@ public class Trail {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Trail trail = (Trail) o;
+        return Objects.equals(id, trail.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

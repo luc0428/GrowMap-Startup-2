@@ -16,9 +16,15 @@ import java.util.List;
 public class RoadMapAdapter extends RecyclerView.Adapter<RoadMapAdapter.RoadMapViewHolder> {
 
     private List<RoadMap> roadMapList;
+    private OnItemClickListener listener;
 
-    public RoadMapAdapter(List<RoadMap> roadMapList) {
+    public interface OnItemClickListener {
+        void onItemClick(RoadMap roadMap);
+    }
+
+    public RoadMapAdapter(List<RoadMap> roadMapList, OnItemClickListener listener) {
         this.roadMapList = roadMapList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -33,6 +39,7 @@ public class RoadMapAdapter extends RecyclerView.Adapter<RoadMapAdapter.RoadMapV
         RoadMap roadMap = roadMapList.get(position);
         holder.tvTitle.setText(roadMap.getTitle());
         holder.tvDescription.setText(roadMap.getDescription());
+        holder.itemView.setOnClickListener(v -> listener.onItemClick(roadMap));
     }
 
     @Override

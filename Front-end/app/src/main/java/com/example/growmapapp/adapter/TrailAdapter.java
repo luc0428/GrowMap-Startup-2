@@ -16,9 +16,15 @@ import java.util.List;
 public class TrailAdapter extends RecyclerView.Adapter<TrailAdapter.TrailViewHolder> {
 
     private List<Trail> trailList;
+    private OnItemClickListener listener;
 
-    public TrailAdapter(List<Trail> trailList) {
+    public interface OnItemClickListener {
+        void onItemClick(Trail trail);
+    }
+
+    public TrailAdapter(List<Trail> trailList, OnItemClickListener listener) {
         this.trailList = trailList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -33,6 +39,7 @@ public class TrailAdapter extends RecyclerView.Adapter<TrailAdapter.TrailViewHol
         Trail trail = trailList.get(position);
         holder.tvTitle.setText(trail.getTitle());
         holder.tvDescription.setText(trail.getDescription());
+        holder.itemView.setOnClickListener(v -> listener.onItemClick(trail));
     }
 
     @Override

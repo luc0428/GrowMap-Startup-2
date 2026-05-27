@@ -8,6 +8,7 @@ import com.example.growmapapp.model.Trail;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -41,6 +42,10 @@ public class FirestoreService {
         return db.collection(COL_ACTIVITY).get();
     }
 
+    public Task<DocumentSnapshot> getActivity(String id) {
+        return db.collection(COL_ACTIVITY).document(id).get();
+    }
+
     public Task<Void> updateActivity(Activity activity) {
         return db.collection(COL_ACTIVITY).document(activity.getId()).set(activity);
     }
@@ -59,6 +64,10 @@ public class FirestoreService {
         return db.collection(COL_ROADMAP).get();
     }
 
+    public Task<DocumentSnapshot> getRoadMap(String id) {
+        return db.collection(COL_ROADMAP).document(id).get();
+    }
+
     public Task<Void> updateRoadMap(RoadMap roadMap) {
         return db.collection(COL_ROADMAP).document(roadMap.getId()).set(roadMap);
     }
@@ -75,6 +84,10 @@ public class FirestoreService {
 
     public Task<QuerySnapshot> getAllTrails() {
         return db.collection(COL_TRAIL).get();
+    }
+
+    public Task<DocumentSnapshot> getTrail(String id) {
+        return db.collection(COL_TRAIL).document(id).get();
     }
 
     public Task<Void> updateTrail(Trail trail) {
