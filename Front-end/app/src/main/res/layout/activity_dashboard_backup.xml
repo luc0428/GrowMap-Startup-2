@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/bg_dark">
 
-    <!-- Top Navbar (Novo Padrão) -->
+    <!-- Top Navbar -->
     <LinearLayout
         android:id="@+id/topNavbar"
         android:layout_width="match_parent"
@@ -25,12 +25,10 @@
             android:layout_height="40dp"
             android:background="@drawable/bg_avatar"
             android:gravity="center"
-            android:text="S"
+            android:text="K"
             android:textColor="@color/accent_cyan"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:clickable="true"
-            android:focusable="true"/>
+            android:textStyle="bold"/>
 
         <LinearLayout
             android:id="@+id/userInfoHeader"
@@ -38,9 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="12dp"
-            android:orientation="vertical"
-            android:clickable="true"
-            android:focusable="true">
+            android:orientation="vertical">
             <TextView
                 android:id="@+id/userName"
                 android:layout_width="wrap_content"
@@ -58,7 +54,6 @@
                 android:textSize="11sp"/>
         </LinearLayout>
 
-        <!-- Manager Dashboard Button (Visible based on permission) -->
         <ImageView
             android:id="@+id/btnManagerDashboard"
             android:layout_width="32dp"
@@ -69,16 +64,13 @@
             android:src="@drawable/ic_brain"
             app:tint="@color/accent_cyan"
             android:clickable="true"
-            android:focusable="true"
-            android:visibility="gone"
-            android:contentDescription="Dashboard Gestor" />
+            android:focusable="true"/>
 
         <ImageView
             android:id="@+id/btnThemeToggle"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Alternar Tema"
             android:padding="6dp"
             android:src="@drawable/ic_moon"
             app:tint="@color/accent_cyan"
@@ -86,7 +78,7 @@
             android:focusable="true"/>
     </LinearLayout>
 
-    <!-- Bottom Navbar (Novo Padrão) -->
+    <!-- Bottom Navbar -->
     <LinearLayout
         android:id="@+id/bottomNavbar"
         android:layout_width="match_parent"
@@ -104,11 +96,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true">
+            android:gravity="center">
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🏠" android:textSize="20sp"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Home" android:textColor="@color/text_secondary" android:textSize="10sp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Home" android:textColor="@color/accent_cyan" android:textSize="10sp" android:textStyle="bold"/>
         </LinearLayout>
 
         <LinearLayout
@@ -117,9 +107,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true">
+            android:gravity="center">
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🗺️" android:textSize="20sp"/>
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Roadmap" android:textColor="@color/text_secondary" android:textSize="10sp"/>
         </LinearLayout>
@@ -132,7 +120,7 @@
             android:orientation="vertical"
             android:gravity="center">
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="💬" android:textSize="20sp"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Suporte" android:textColor="@color/accent_cyan" android:textSize="10sp" android:textStyle="bold"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Suporte" android:textColor="@color/text_secondary" android:textSize="10sp"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -149,59 +137,95 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <!-- Hero: Nota Geral -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Como podemos ajudar?"
-                android:textColor="@color/text_primary"
-                android:textSize="24sp"
-                android:textStyle="bold"/>
+                android:background="@drawable/bg_card_darkblue"
+                android:orientation="horizontal"
+                android:padding="20dp"
+                android:gravity="center_vertical">
 
-            <!-- FAQ Section -->
+                <RelativeLayout
+                    android:layout_width="90dp"
+                    android:layout_height="90dp">
+                    <ProgressBar
+                        android:id="@+id/donutProgress"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:indeterminate="false"
+                        android:max="100"
+                        android:progress="83"
+                        android:progressDrawable="@drawable/bg_donut" />
+                    <TextView
+                        android:id="@+id/txtOverallScore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="83%"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold"/>
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="20dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Nota Geral"
+                        android:textColor="@color/accent_cyan"
+                        android:textSize="14sp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Seu desempenho geral está excelente!"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="11sp"
+                        android:layout_marginTop="4dp"/>
+                </LinearLayout>
+            </LinearLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Perguntas Frequentes"
-                android:textColor="@color/accent_cyan"
-                android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:text="Em Andamento"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"
+                android:textSize="16sp"/>
 
-            <LinearLayout
-                android:id="@+id/faqContainer"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvInProgress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:orientation="vertical">
-                <!-- FAQ Items will be added here -->
-            </LinearLayout>
+                android:nestedScrollingEnabled="false"/>
 
-            <!-- Botpress Webchat WebView -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:text="Fale com nosso suporte inteligente"
-                android:textColor="@color/accent_cyan"
-                android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:text="Histórico de Conclusão"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"
+                android:textSize="16sp"/>
 
-            <LinearLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvFinished"
                 android:layout_width="match_parent"
-                android:layout_height="450dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:layout_marginBottom="40dp"
+                android:nestedScrollingEnabled="false"
                 android:background="@drawable/bg_card_darkblue"
-                android:orientation="vertical"
-                android:padding="8dp">
+                android:paddingHorizontal="12dp"/>
 
-                <WebView
-                    android:id="@+id/botpressWebView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/transparent" />
-
-            </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </RelativeLayout>

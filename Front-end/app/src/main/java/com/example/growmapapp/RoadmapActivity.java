@@ -228,9 +228,6 @@ public class RoadmapActivity extends AppCompatActivity {
     }
 
     private void setupActions() {
-        View btnBack = findViewById(R.id.btnBackToDashboard);
-        if (btnBack != null) btnBack.setOnClickListener(v -> finish());
-
         View btnCreate = findViewById(R.id.btnCreateRoad);
         if (btnCreate != null) btnCreate.setOnClickListener(v -> showSelectionDialog());
     }

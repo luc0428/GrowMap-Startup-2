@@ -30,7 +30,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void setupNavbar() {
         ImageView btnThemeToggle = findViewById(R.id.btnThemeToggle);
-        TextView btnDashboard = findViewById(R.id.btnNavDashboardText);
 
         updateThemeIcon(btnThemeToggle);
 
@@ -43,14 +42,6 @@ public class ProfileActivity extends AppCompatActivity {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 }
                 recreate();
-            });
-        }
-
-        if (btnDashboard != null) {
-            btnDashboard.setOnClickListener(v -> {
-                Intent intent = new Intent(this, DashboardActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
             });
         }
     }

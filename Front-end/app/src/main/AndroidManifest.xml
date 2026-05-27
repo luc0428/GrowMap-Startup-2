@@ -54,6 +54,14 @@
             android:name=".ProfileActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".PracticeActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".UserListActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

@@ -19,6 +19,8 @@ public class GerenciarUser extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
+    private String targetUserId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,16 +29,21 @@ public class GerenciarUser extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
+        if (getIntent().hasExtra("userId")) {
+            targetUserId = getIntent().getStringExtra("userId");
+        } else if (mAuth.getCurrentUser() != null) {
+            targetUserId = mAuth.getCurrentUser().getUid();
+        }
+
         setupNavbar();
         setupActions();
         loadUserInfo();
     }
 
     private void loadUserInfo() {
-        if (mAuth.getCurrentUser() == null) return;
+        if (targetUserId == null) return;
 
-        String userId = mAuth.getCurrentUser().getUid();
-        db.collection("user").document(userId).get()
+        db.collection("user").document(targetUserId).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null && task.getResult().exists()) {
                         String name = task.getResult().getString("fullname");
@@ -47,7 +54,7 @@ public class GerenciarUser extends AppCompatActivity {
                         TextView userRole = findViewById(R.id.userRole);
                         TextView userAvatar = findViewById(R.id.userAvatar);
                         EditText etName = findViewById(R.id.etName);
-                        EditText etRole = findViewById(R.id.etRole);
+                        android.widget.Spinner spinnerRole = findViewById(R.id.spinnerRole);
                         EditText etEmail = findViewById(R.id.etEmail);
 
                         if (userName != null && name != null) userName.setText(name);
@@ -57,7 +64,22 @@ public class GerenciarUser extends AppCompatActivity {
                         }
 
                         if (etName != null && name != null) etName.setText(name);
-                        if (etRole != null && role != null) etRole.setText(role);
+                        
+                        if (spinnerRole != null) {
+                            String[] roles = {"Desenvolvedor", "Analista", "Gestor", "Designer", "QA"};
+                            android.widget.ArrayAdapter<String> adapter = new android.widget.ArrayAdapter<>(this, android.R.layout.simple_spinner_item, roles);
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            spinnerRole.setAdapter(adapter);
+                            if (role != null) {
+                                for (int i = 0; i < roles.length; i++) {
+                                    if (roles[i].equalsIgnoreCase(role)) {
+                                        spinnerRole.setSelection(i);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        
                         if (etEmail != null && email != null) etEmail.setText(email);
                     }
                 });
@@ -76,15 +98,14 @@ public class GerenciarUser extends AppCompatActivity {
     }
 
     private void saveUserData() {
-        if (mAuth.getCurrentUser() == null) return;
+        if (targetUserId == null) return;
 
-        String userId = mAuth.getCurrentUser().getUid();
         EditText etName = findViewById(R.id.etName);
-        EditText etRole = findViewById(R.id.etRole);
+        android.widget.Spinner spinnerRole = findViewById(R.id.spinnerRole);
         EditText etEmail = findViewById(R.id.etEmail);
 
         String name = etName.getText().toString().trim();
-        String role = etRole.getText().toString().trim();
+        String role = spinnerRole.getSelectedItem() != null ? spinnerRole.getSelectedItem().toString() : "";
         String email = etEmail.getText().toString().trim();
 
         if (name.isEmpty() || role.isEmpty() || email.isEmpty()) {
@@ -97,7 +118,7 @@ public class GerenciarUser extends AppCompatActivity {
         updates.put("role", role);
         updates.put("email", email);
 
-        db.collection("user").document(userId).update(updates)
+        db.collection("user").document(targetUserId).update(updates)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "Dados atualizados com sucesso!", Toast.LENGTH_SHORT).show();
                     loadUserInfo(); // Refresh UI
@@ -110,8 +131,6 @@ public class GerenciarUser extends AppCompatActivity {
     private void setupNavbar() {
         ImageView btnThemeToggle = findViewById(R.id.btnThemeToggle);
         View userAvatar = findViewById(R.id.userAvatar);
-        TextView btnDashboard = findViewById(R.id.btnNavDashboardText);
-        TextView btnSuporte = findViewById(R.id.btnNavSuporteText);
 
         // Bottom Navbar
         View btnNavHome = findViewById(R.id.btnNavHome);
@@ -130,20 +149,6 @@ public class GerenciarUser extends AppCompatActivity {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 }
                 recreate();
-            });
-        }
-
-        if (btnDashboard != null) {
-            btnDashboard.setOnClickListener(v -> {
-                Intent intent = new Intent(this, DashboardActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
-            });
-        }
-
-        if (btnSuporte != null) {
-            btnSuporte.setOnClickListener(v -> {
-                startActivity(new Intent(this, SupportActivity.class));
             });
         }
 

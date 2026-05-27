@@ -56,28 +56,6 @@
                 android:textSize="11sp"/>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/btnNavDashboardText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Dashboard"
-            android:textColor="@color/text_secondary"
-            android:textSize="14sp"
-            android:layout_marginEnd="16dp"
-            android:clickable="true"
-            android:focusable="true"/>
-
-        <TextView
-            android:id="@+id/btnNavSuporteText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Suporte"
-            android:textColor="@color/text_secondary"
-            android:textSize="14sp"
-            android:layout_marginEnd="16dp"
-            android:clickable="true"
-            android:focusable="true"/>
-
         <ImageView
             android:id="@+id/btnThemeToggle"
             android:layout_width="24dp"
@@ -280,9 +258,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginBottom="40dp"
+                android:layout_marginBottom="24dp"
                 android:background="@drawable/bg_card_darkblue"
                 android:padding="16dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Últimos Quizzes Finalizados (Relatórios)"
+                android:textColor="@color/text_muted"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:textAllCaps="true"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvRecentReports"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="40dp"
+                android:clipToPadding="false"/>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

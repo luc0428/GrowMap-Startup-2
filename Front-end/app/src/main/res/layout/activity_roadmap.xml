@@ -136,19 +136,6 @@
             android:paddingBottom="32dp">
 
             <!-- Back Button -->
-            <TextView
-                android:id="@+id/btnBackToDashboard"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/bg_back"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="6dp"
-                android:text="‹ Voltar para o Dashboard"
-                android:textColor="@color/text_secondary"
-                android:textSize="13sp"
-                android:clickable="true"
-                android:focusable="true"/>
 
             <!-- TITLE & CREATE BUTTON -->
             <LinearLayout
