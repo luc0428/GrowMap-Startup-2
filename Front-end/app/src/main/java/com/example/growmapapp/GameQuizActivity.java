@@ -24,7 +24,7 @@ public class GameQuizActivity extends AppCompatActivity {
     int currentQuestion = 0;
     int score = 0;
 
-    private String activityId, roadmapId, stepId;
+    private String activityId, roadmapId, stepId, trailId;
     private com.google.firebase.firestore.FirebaseFirestore db;
     private com.google.firebase.auth.FirebaseAuth mAuth;
 
@@ -39,6 +39,7 @@ public class GameQuizActivity extends AppCompatActivity {
         activityId = getIntent().getStringExtra("activityId");
         roadmapId = getIntent().getStringExtra("roadmapId");
         stepId = getIntent().getStringExtra("stepId");
+        trailId = getIntent().getStringExtra("trailId");
 
         txtQuestion = findViewById(R.id.txtQuestion);
         txtProgress = findViewById(R.id.txtProgress);
@@ -139,8 +140,12 @@ public class GameQuizActivity extends AppCompatActivity {
         // Salvar no Histórico (Back-end)
         saveQuizResultToFirestore();
 
-        if (score >= (questions.size() * 0.6) && mAuth.getCurrentUser() != null && roadmapId != null && stepId != null) {
-            updateStepStatus();
+        if (score >= (questions.size() * 0.6) && mAuth.getCurrentUser() != null) {
+            if (roadmapId != null && stepId != null) {
+                updateStepStatus();
+            } else if (trailId != null && activityId != null) {
+                updateTrailActivityStatus();
+            }
         }
 
         btnExit.setOnClickListener(v -> finish());
@@ -183,6 +188,19 @@ public class GameQuizActivity extends AppCompatActivity {
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "Progresso salvo!", Toast.LENGTH_SHORT).show();
                     unlockNextStep(userId);
+                });
+    }
+
+    private void updateTrailActivityStatus() {
+        db.collection("activityTrail")
+                .whereEqualTo("trailId", trailId)
+                .whereEqualTo("activityId", activityId)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    for (com.google.firebase.firestore.DocumentSnapshot doc : querySnapshot) {
+                        doc.getReference().update("completed", true);
+                    }
+                    Toast.makeText(this, "Trilha atualizada!", Toast.LENGTH_SHORT).show();
                 });
     }
 

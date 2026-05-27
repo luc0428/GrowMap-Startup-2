@@ -198,13 +198,16 @@
 
                 <!-- Card 2 -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cardPerformance"
                     android:layout_width="0dp"
                     android:layout_height="120dp"
                     android:layout_columnWeight="1"
                     android:layout_margin="6dp"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="0dp"
-                    app:cardBackgroundColor="@color/bg_card_darkblue">
+                    app:cardBackgroundColor="@color/bg_card_darkblue"
+                    android:clickable="true"
+                    android:focusable="true">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -212,19 +215,23 @@
                         android:padding="16dp"
                         android:gravity="center">
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="📈" android:textSize="24sp"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="Desempenho Geral" android:textColor="@color/text_primary" android:textSize="12sp" android:textStyle="bold" android:gravity="center"/>
+                        <TextView android:id="@+id/tvPerformanceValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--" android:textColor="@color/accent_cyan" android:textSize="18sp" android:textStyle="bold"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Desempenho Geral" android:textColor="@color/text_primary" android:textSize="10sp" android:textStyle="bold" android:gravity="center"/>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
                 <!-- Card 3 -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cardGoals"
                     android:layout_width="0dp"
                     android:layout_height="120dp"
                     android:layout_columnWeight="1"
                     android:layout_margin="6dp"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="0dp"
-                    app:cardBackgroundColor="@color/bg_card_darkblue">
+                    app:cardBackgroundColor="@color/bg_card_darkblue"
+                    android:clickable="true"
+                    android:focusable="true">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -232,19 +239,23 @@
                         android:padding="16dp"
                         android:gravity="center">
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🎯" android:textSize="24sp"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="Metas do Setor" android:textColor="@color/text_primary" android:textSize="12sp" android:textStyle="bold" android:gravity="center"/>
+                        <TextView android:id="@+id/tvGoalsValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--" android:textColor="@color/accent_cyan" android:textSize="18sp" android:textStyle="bold"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Metas do Setor" android:textColor="@color/text_primary" android:textSize="10sp" android:textStyle="bold" android:gravity="center"/>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
                 <!-- Card 4 -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cardReports"
                     android:layout_width="0dp"
                     android:layout_height="120dp"
                     android:layout_columnWeight="1"
                     android:layout_margin="6dp"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="0dp"
-                    app:cardBackgroundColor="@color/bg_card_darkblue">
+                    app:cardBackgroundColor="@color/bg_card_darkblue"
+                    android:clickable="true"
+                    android:focusable="true">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -252,7 +263,8 @@
                         android:padding="16dp"
                         android:gravity="center">
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="📋" android:textSize="24sp"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="Relatórios" android:textColor="@color/text_primary" android:textSize="12sp" android:textStyle="bold" android:gravity="center"/>
+                        <TextView android:id="@+id/tvReportsValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--" android:textColor="@color/accent_cyan" android:textSize="18sp" android:textStyle="bold"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Relatórios" android:textColor="@color/text_primary" android:textSize="10sp" android:textStyle="bold" android:gravity="center"/>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
             </GridLayout>
