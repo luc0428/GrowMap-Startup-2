@@ -183,6 +183,7 @@
 
             <!-- FILTROS PRINCIPAIS -->
             <LinearLayout
+                android:id="@+id/filterContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -237,6 +238,22 @@
                 </LinearLayout>
 
             </LinearLayout>
+
+            <!-- TABS (Filtro por Roadmap) -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:scrollbars="none">
+                <LinearLayout
+                    android:id="@+id/roadmapTabsContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingVertical="4dp">
+                    <!-- Gerado dinamicamente via Java -->
+                </LinearLayout>
+            </HorizontalScrollView>
 
             <!-- PROGRESS SUMMARY (UX Booster) -->
             <androidx.cardview.widget.CardView

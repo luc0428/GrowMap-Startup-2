@@ -11,7 +11,7 @@
         android:orientation="vertical"
         android:paddingBottom="32dp">
 
-        <!-- TOP BAR -->
+        <!-- TOP BAR (DINÂMICO) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,20 +20,25 @@
             android:padding="16dp">
 
             <FrameLayout
+                android:id="@+id/btnBack"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:background="@drawable/bg_avatar_cyan">
+                android:background="@drawable/bg_avatar_cyan"
+                android:clickable="true"
+                android:focusable="true">
                 <TextView
+                    android:id="@+id/userAvatar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="K"
+                    android:text="U"
                     android:textColor="@color/text_primary"
                     android:textStyle="bold"
                     android:textSize="18sp"/>
             </FrameLayout>
 
             <LinearLayout
+                android:id="@+id/userInfoHeader"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -44,111 +49,50 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <TextView
+                        android:id="@+id/userNameFirst"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Kauan "
+                        android:text="Usuário "
                         android:textColor="@color/cyan"
                         android:textStyle="bold"
                         android:textSize="14sp"/>
                     <TextView
+                        android:id="@+id/userNameLast"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Davi"
+                        android:text=""
                         android:textColor="@color/text_primary"
                         android:textStyle="bold"
                         android:textSize="14sp"/>
                 </LinearLayout>
                 <TextView
+                    android:id="@+id/userRole"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Analista de TI"
+                    android:text="Cargo"
                     android:textColor="@color/text_muted"
                     android:textSize="11sp"/>
             </LinearLayout>
-
-            <ImageView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:padding="6dp"
-                android:background="@drawable/bg_back"
-                android:src="@drawable/ic_sun"/>
-            <ImageView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginStart="8dp"
-                android:padding="6dp"
-                android:background="@drawable/bg_back"
-                android:src="@drawable/ic_logout"/>
         </LinearLayout>
 
-        <!-- NAV -->
+        <!-- TITLE -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:paddingBottom="8dp">
-            <TextView style="@style/NavItem" android:text="Dashboard"/>
-            <TextView style="@style/NavItem" android:text="Cursos"/>
-            <TextView style="@style/NavItem" android:text="Suporte"/>
-        </LinearLayout>
-
-        <!-- BACK -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/bg_back"
-            android:paddingHorizontal="14dp"
-            android:paddingVertical="8dp"
-            android:text="‹ Voltar para o Dashboard"
-            android:textColor="@color/text_muted"
-            android:textSize="13sp"/>
-
-        <!-- TITLE + CTA -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
             android:padding="16dp">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Meus Road Maps"
-                    android:textColor="@color/text_primary"
-                    android:textSize="26sp"
-                    android:textStyle="bold"/>
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <!-- TABS -->
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="none"
-            android:paddingHorizontal="16dp">
-            <LinearLayout
+            <TextView
+                android:id="@+id/tvRoadmapTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView style="@style/Tab" android:background="@drawable/bg_tab_active" android:text="☕  Java"/>
-                <TextView style="@style/Tab" android:background="@drawable/bg_tab" android:text="🦆  Python"/>
-                <TextView style="@style/Tab" android:background="@drawable/bg_tab" android:text="📊  Excel"/>
-                <TextView style="@style/Tab" android:background="@drawable/bg_tab" android:text="📄  Office 365"/>
-            </LinearLayout>
-        </HorizontalScrollView>
+                android:text="Minha Jornada"
+                android:textColor="@color/text_primary"
+                android:textSize="26sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
 
         <!-- ROADMAP PANEL -->
         <LinearLayout
+            android:id="@+id/roadmapContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
@@ -157,217 +101,8 @@
             android:orientation="vertical"
             android:paddingVertical="24dp">
 
-            <!-- TOP TARGET -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:orientation="vertical"
-                android:gravity="center">
-                <FrameLayout
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    android:background="@drawable/bg_target">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_target"/>
-                </FrameLayout>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:text="Role para cima e suba na sua jornada!"
-                    android:textColor="@color/cyan"
-                    android:textSize="11sp"
-                    android:textStyle="bold"/>
-            </LinearLayout>
+            <!-- Conteúdo Dinâmico será inserido aqui -->
 
-            <!-- ROW: locked node (left/center) + Orientação a Objetos card (right) -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="16dp">
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"/>
-
-                <FrameLayout
-                    android:layout_width="60dp"
-                    android:layout_height="60dp">
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/bg_node_glow_yellow"/>
-                    <FrameLayout
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/bg_node_locked">
-                        <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_lock"/>
-                    </FrameLayout>
-                </FrameLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.4"
-                    android:layout_marginStart="12dp"
-                    android:background="@drawable/bg_module_card"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="12dp">
-                    <ImageView
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/ic_key"/>
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="10dp"
-                        android:orientation="vertical">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Orientação a Objetos"
-                            android:textColor="@color/text_primary"
-                            android:textStyle="bold"
-                            android:textSize="13sp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Classes, Herança, Polimorfismo."
-                            android:textColor="@color/text_muted"
-                            android:textSize="11sp"/>
-                    </LinearLayout>
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:src="@drawable/ic_arrow_right"/>
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- ROW: Lógica card (left) + hourglass node (right/center) -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="16dp">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.4"
-                    android:background="@drawable/bg_module_card"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="12dp">
-                    <ImageView
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/ic_brain"/>
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="10dp"
-                        android:orientation="vertical">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Lógica e Fundamentos"
-                            android:textColor="@color/text_primary"
-                            android:textStyle="bold"
-                            android:textSize="13sp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Sintaxe básica, variáveis, loops."
-                            android:textColor="@color/text_muted"
-                            android:textSize="11sp"/>
-                    </LinearLayout>
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:src="@drawable/ic_arrow_right"/>
-                </LinearLayout>
-
-                <FrameLayout
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginStart="12dp">
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/bg_node_glow_purple"/>
-                    <FrameLayout
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/bg_node_inprogress">
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_hourglass"/>
-                    </FrameLayout>
-                </FrameLayout>
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"/>
-            </LinearLayout>
-
-            <!-- START NODE -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="56dp"
-                android:layout_gravity="center_horizontal"
-                android:orientation="vertical"
-                android:gravity="center">
-                <FrameLayout
-                    android:layout_width="76dp"
-                    android:layout_height="76dp">
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/bg_node_glow_cyan"/>
-                    <FrameLayout
-                        android:layout_width="62dp"
-                        android:layout_height="62dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/bg_node_start">
-                        <ImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_rocket"/>
-                    </FrameLayout>
-                </FrameLayout>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="Início da Jornada"
-                    android:textColor="@color/text_primary"
-                    android:textSize="14sp"
-                    android:textStyle="bold"/>
-            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

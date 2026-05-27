@@ -2,6 +2,7 @@ package com.example.growmapapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,7 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.growmapapp.adapter.ActivityAdapter;
-import com.example.growmapapp.adapter.LearningPathAdapter;
 import com.example.growmapapp.adapter.RoadMapAdapter;
 import com.example.growmapapp.adapter.SelectionAdapter;
 import com.example.growmapapp.adapter.TrailAdapter;
@@ -34,7 +34,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +43,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class RoadmapActivity extends AppCompatActivity {
 
+    private static final String TAG = "RoadmapActivity";
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private FirestoreService firestoreService;
@@ -51,6 +51,7 @@ public class RoadmapActivity extends AppCompatActivity {
     private RecyclerView rvSteps;
     private TextView tvJornadaTitle;
     private LinearLayout btnFilterRoadmaps, btnFilterTrails, btnFilterActivities;
+    private LinearLayout tabsContainer;
     
     private List<Trail> selectedTrails = new ArrayList<>();
     private List<Activity> selectedActivities = new ArrayList<>();
@@ -66,6 +67,7 @@ public class RoadmapActivity extends AppCompatActivity {
 
         rvSteps = findViewById(R.id.rvRoadmapSteps);
         tvJornadaTitle = findViewById(R.id.tvJornadaTitle);
+        tabsContainer = findViewById(R.id.roadmapTabsContainer);
 
         btnFilterRoadmaps = findViewById(R.id.filterRoadmaps);
         btnFilterTrails = findViewById(R.id.filterTrails);
@@ -78,8 +80,9 @@ public class RoadmapActivity extends AppCompatActivity {
         setupFilters();
         loadUserInfo();
         
-        // Iniciar com Roadmaps selecionado por padrão
+        // Initial state
         btnFilterRoadmaps.performClick();
+        loadRoadmapTabs();
     }
 
     private void setupNavbar() {
@@ -155,99 +158,105 @@ public class RoadmapActivity extends AppCompatActivity {
     private void loadAllRoadmaps() {
         firestoreService.getAllRoadMaps().addOnSuccessListener(querySnapshot -> {
             List<RoadMap> list = querySnapshot.toObjects(RoadMap.class);
-            rvSteps.setAdapter(new RoadMapAdapter(list, this::viewRoadmap, this::showRoadmapFormDialog, this::deleteRoadmap));
-        });
-    }
-
-    private void viewRoadmap(RoadMap roadMap) {
-        tvJornadaTitle.setText("Trilhas de: " + roadMap.getTitle());
-        firestoreService.getTrailsByRoadMap(roadMap.getId()).addOnSuccessListener(querySnapshot -> {
-            List<MapTrail> pivots = querySnapshot.toObjects(MapTrail.class);
-            pivots.sort(Comparator.comparingInt(MapTrail::getOrder));
-            
-            List<Trail> trails = new ArrayList<>();
-            AtomicInteger count = new AtomicInteger(pivots.size());
-            if (pivots.isEmpty()) {
-                rvSteps.setAdapter(null);
-                return;
-            }
-
-            for (MapTrail p : pivots) {
-                firestoreService.getTrail(p.getTrailId()).addOnSuccessListener(doc -> {
-                    if (doc.exists()) trails.add(doc.toObject(Trail.class));
-                    if (count.decrementAndGet() == 0) {
-                        rvSteps.setAdapter(new TrailAdapter(trails, this::viewTrail, this::showTrailFormDialog, this::deleteTrail));
-                    }
-                });
-            }
+            // Restoration: Click card -> load sub-items, Click pencil -> edit
+            rvSteps.setAdapter(new RoadMapAdapter(list, this::loadTrailsOfRoadmap, this::showRoadmapFormDialog, this::deleteRoadmap));
         });
     }
 
     private void loadAllTrails() {
         firestoreService.getAllTrails().addOnSuccessListener(querySnapshot -> {
             List<Trail> list = querySnapshot.toObjects(Trail.class);
-            rvSteps.setAdapter(new TrailAdapter(list, this::viewTrail, this::showTrailFormDialog, this::deleteTrail));
+            rvSteps.setAdapter(new TrailAdapter(list, this::loadActivitiesOfTrail, this::showTrailFormDialog, this::deleteTrail));
         });
     }
 
-    private void viewTrail(Trail trail) {
-        tvJornadaTitle.setText("Jornada: " + trail.getTitle());
-        firestoreService.getActivitiesByTrail(trail.getId()).addOnSuccessListener(querySnapshot -> {
-            List<ActivityTrail> pivots = querySnapshot.toObjects(ActivityTrail.class);
-            pivots.sort(Comparator.comparingInt(ActivityTrail::getOrder));
+    private void loadAllActivities() {
+        firestoreService.getAllActivities().addOnSuccessListener(querySnapshot -> {
+            List<Activity> list = querySnapshot.toObjects(Activity.class);
+            rvSteps.setAdapter(new ActivityAdapter(list, 
+                act -> Toast.makeText(this, "Acessando atividade: " + act.getTitle(), Toast.LENGTH_SHORT).show(), 
+                this::showActivityFormDialog, 
+                this::deleteActivity));
+        });
+    }
 
-            List<Activity> activities = new ArrayList<>();
-            AtomicInteger count = new AtomicInteger(pivots.size());
+    private void loadTrailsOfRoadmap(RoadMap roadMap) {
+        tvJornadaTitle.setText("Jornada: " + roadMap.getTitle());
+        firestoreService.getTrailsByRoadMap(roadMap.getId()).addOnSuccessListener(querySnapshot -> {
+            List<MapTrail> pivots = querySnapshot.toObjects(MapTrail.class);
+            pivots.sort(Comparator.comparingInt(MapTrail::getOrder));
+            
+            List<Trail> trailsList = new ArrayList<>();
             if (pivots.isEmpty()) {
-                rvSteps.setAdapter(null);
+                rvSteps.setAdapter(new TrailAdapter(trailsList, null, null, null));
                 return;
             }
 
-            for (ActivityTrail p : pivots) {
-                firestoreService.getActivity(p.getActivityId()).addOnSuccessListener(doc -> {
-                    if (doc.exists()) activities.add(doc.toObject(Activity.class));
+            AtomicInteger count = new AtomicInteger(pivots.size());
+            Map<String, Trail> loadedMap = new HashMap<>();
+            for (MapTrail pivot : pivots) {
+                firestoreService.getTrail(pivot.getTrailId()).addOnSuccessListener(doc -> {
+                    if (doc.exists()) loadedMap.put(pivot.getTrailId(), doc.toObject(Trail.class));
                     if (count.decrementAndGet() == 0) {
-                        rvSteps.setAdapter(new LearningPathAdapter(activities, this::startQuizActivity));
+                        for (MapTrail p : pivots) {
+                            Trail t = loadedMap.get(p.getTrailId());
+                            if (t != null) trailsList.add(t);
+                        }
+                        rvSteps.setAdapter(new TrailAdapter(trailsList, this::loadActivitiesOfTrail, this::showTrailFormDialog, this::deleteTrail));
                     }
                 });
             }
         });
     }
 
-    private void startQuizActivity(Activity activity) {
-        Intent intent = new Intent(this, GameQuizActivity.class);
-        intent.putExtra("activityId", activity.getId());
-        startActivity(intent);
-    }
+    private void loadActivitiesOfTrail(Trail trail) {
+        tvJornadaTitle.setText("Trilha: " + trail.getTitle());
+        firestoreService.getActivitiesByTrail(trail.getId()).addOnSuccessListener(querySnapshot -> {
+            List<ActivityTrail> pivots = querySnapshot.toObjects(ActivityTrail.class);
+            pivots.sort(Comparator.comparingInt(ActivityTrail::getOrder));
 
-    private void loadAllActivities() {
-        firestoreService.getAllActivities().addOnSuccessListener(querySnapshot -> {
-            List<Activity> list = querySnapshot.toObjects(Activity.class);
-            rvSteps.setAdapter(new ActivityAdapter(list, this::startQuizActivity, this::showActivityFormDialog, this::deleteActivity));
+            List<Activity> actsList = new ArrayList<>();
+            if (pivots.isEmpty()) {
+                rvSteps.setAdapter(new ActivityAdapter(actsList, null, null, null));
+                return;
+            }
+
+            AtomicInteger count = new AtomicInteger(pivots.size());
+            Map<String, Activity> loadedMap = new HashMap<>();
+            for (ActivityTrail pivot : pivots) {
+                firestoreService.getActivity(pivot.getActivityId()).addOnSuccessListener(doc -> {
+                    if (doc.exists()) loadedMap.put(pivot.getActivityId(), doc.toObject(Activity.class));
+                    if (count.decrementAndGet() == 0) {
+                        for (ActivityTrail p : pivots) {
+                            Activity a = loadedMap.get(p.getActivityId());
+                            if (a != null) actsList.add(a);
+                        }
+                        rvSteps.setAdapter(new ActivityAdapter(actsList, 
+                            act -> Toast.makeText(this, "Tarefa: " + act.getTitle(), Toast.LENGTH_SHORT).show(),
+                            this::showActivityFormDialog, this::deleteActivity));
+                    }
+                });
+            }
         });
     }
 
     private void deleteRoadmap(RoadMap roadMap) {
         new android.app.AlertDialog.Builder(this)
             .setTitle("Excluir Roadmap")
-            .setMessage("Tem certeza que deseja excluir '" + roadMap.getTitle() + "'? Isso removerá todos os vínculos com trilhas.")
+            .setMessage("Excluir '" + roadMap.getTitle() + "'?")
             .setPositiveButton("Excluir", (d, w) -> {
                 firestoreService.deleteRoadMap(roadMap.getId()).addOnSuccessListener(aVoid -> {
-                    firestoreService.getTrailsByRoadMap(roadMap.getId()).addOnSuccessListener(querySnapshot -> {
-                        for (DocumentSnapshot doc : querySnapshot) firestoreService.deleteMapTrail(doc.getId());
+                    firestoreService.getTrailsByRoadMap(roadMap.getId()).addOnSuccessListener(qs -> {
+                        for (DocumentSnapshot doc : qs) firestoreService.deleteMapTrail(doc.getId());
                     });
-                    Toast.makeText(this, "Roadmap excluído!", Toast.LENGTH_SHORT).show();
                     loadAllRoadmaps();
                 });
-            })
-            .setNegativeButton("Cancelar", null)
-            .show();
+            }).setNegativeButton("Cancelar", null).show();
     }
 
     private void deleteTrail(Trail trail) {
         new android.app.AlertDialog.Builder(this)
             .setTitle("Excluir Trilha")
-            .setMessage("Tem certeza que deseja excluir '" + trail.getTitle() + "'? Isso removerá os vínculos em roadmaps e tarefas.")
             .setPositiveButton("Excluir", (d, w) -> {
                 firestoreService.deleteTrail(trail.getId()).addOnSuccessListener(aVoid -> {
                     db.collection("mapTrail").whereEqualTo("trailId", trail.getId()).get().addOnSuccessListener(qs -> {
@@ -256,29 +265,22 @@ public class RoadmapActivity extends AppCompatActivity {
                     firestoreService.getActivitiesByTrail(trail.getId()).addOnSuccessListener(qs -> {
                         for (DocumentSnapshot doc : qs) firestoreService.deleteActivityTrail(doc.getId());
                     });
-                    Toast.makeText(this, "Trilha excluída!", Toast.LENGTH_SHORT).show();
                     loadAllTrails();
                 });
-            })
-            .setNegativeButton("Cancelar", null)
-            .show();
+            }).setNegativeButton("Cancelar", null).show();
     }
 
     private void deleteActivity(Activity activity) {
         new android.app.AlertDialog.Builder(this)
             .setTitle("Excluir Tarefa")
-            .setMessage("Tem certeza que deseja excluir '" + activity.getTitle() + "'?")
             .setPositiveButton("Excluir", (d, w) -> {
                 firestoreService.deleteActivity(activity.getId()).addOnSuccessListener(aVoid -> {
                     db.collection("activityTrail").whereEqualTo("activityId", activity.getId()).get().addOnSuccessListener(qs -> {
                         for (DocumentSnapshot doc : qs) firestoreService.deleteActivityTrail(doc.getId());
                     });
-                    Toast.makeText(this, "Tarefa excluída!", Toast.LENGTH_SHORT).show();
                     loadAllActivities();
                 });
-            })
-            .setNegativeButton("Cancelar", null)
-            .show();
+            }).setNegativeButton("Cancelar", null).show();
     }
 
     private void loadUserInfo() {
@@ -287,17 +289,33 @@ public class RoadmapActivity extends AppCompatActivity {
         db.collection("user").document(userId).get().addOnSuccessListener(doc -> {
             if (doc.exists()) {
                 String name = doc.getString("fullname");
-                String role = doc.getString("role");
                 TextView userName = findViewById(R.id.userName);
                 TextView userAvatar = findViewById(R.id.userAvatar);
-                TextView userRole = findViewById(R.id.userRole);
-                if (userName != null) userName.setText(name != null ? name : "Usuário");
-                if (userRole != null) userRole.setText(role != null ? role : "Explorador");
+                if (userName != null) userName.setText(name);
                 if (userAvatar != null && name != null && !name.isEmpty()) {
                     userAvatar.setText(name.substring(0,1).toUpperCase());
                 }
             }
         });
+    }
+
+    private void loadRoadmapTabs() {
+        firestoreService.getAllRoadMaps().addOnSuccessListener(qs -> {
+            List<RoadMap> roadmaps = qs.toObjects(RoadMap.class);
+            updateTabs(roadmaps);
+        });
+    }
+
+    private void updateTabs(List<RoadMap> roadmaps) {
+        if (tabsContainer == null) return;
+        tabsContainer.removeAllViews();
+        for (RoadMap rm : roadmaps) {
+            View tabView = getLayoutInflater().inflate(R.layout.item_roadmap_tab, tabsContainer, false);
+            ((TextView)tabView.findViewById(R.id.tabIcon)).setText("🗺️");
+            ((TextView)tabView.findViewById(R.id.tabName)).setText(rm.getTitle());
+            tabView.setOnClickListener(v -> loadTrailsOfRoadmap(rm));
+            tabsContainer.addView(tabView);
+        }
     }
 
     private void showCreateOptionsDialog() {
@@ -321,7 +339,6 @@ public class RoadmapActivity extends AppCompatActivity {
         TextView btnSave = view.findViewById(R.id.btnSaveRoadmap);
 
         selectedTrails.clear();
-
         SelectionAdapter<Trail> selectionAdapter = new SelectionAdapter<>(selectedTrails, R.layout.item_trail_selection, Trail::getTitle, (item, position) -> {
             selectedTrails.remove(position);
             Objects.requireNonNull(rvSelected.getAdapter()).notifyItemRemoved(position);
@@ -346,48 +363,45 @@ public class RoadmapActivity extends AppCompatActivity {
             etDesc.setText(roadMap.getDescription());
             btnSave.setText("Salvar Alterações");
 
-            firestoreService.getTrailsByRoadMap(roadMap.getId()).addOnSuccessListener(querySnapshot -> {
-                List<MapTrail> pivots = querySnapshot.toObjects(MapTrail.class);
+            firestoreService.getTrailsByRoadMap(roadMap.getId()).addOnSuccessListener(qs -> {
+                List<MapTrail> pivots = qs.toObjects(MapTrail.class);
                 pivots.sort(Comparator.comparingInt(MapTrail::getOrder));
                 if (pivots.isEmpty()) return;
                 
                 AtomicInteger count = new AtomicInteger(pivots.size());
-                Map<String, Trail> loadedTrails = new HashMap<>();
-
+                Map<String, Trail> loaded = new HashMap<>();
                 for (MapTrail p : pivots) {
                     firestoreService.getTrail(p.getTrailId()).addOnSuccessListener(doc -> {
-                        if (doc.exists()) {
-                            loadedTrails.put(p.getTrailId(), doc.toObject(Trail.class));
-                        }
+                        if (doc.exists()) loaded.put(p.getTrailId(), doc.toObject(Trail.class));
                         if (count.decrementAndGet() == 0) {
                             selectedTrails.clear();
                             for (MapTrail pivot : pivots) {
-                                Trail t = loadedTrails.get(pivot.getTrailId());
+                                Trail t = loaded.get(pivot.getTrailId());
                                 if (t != null) selectedTrails.add(t);
                             }
                             selectionAdapter.notifyDataSetChanged();
                         }
+                    }).addOnFailureListener(e -> {
+                        if (count.decrementAndGet() == 0) selectionAdapter.notifyDataSetChanged();
                     });
                 }
             });
         }
 
-        view.findViewById(R.id.btnCancel).setOnClickListener(v -> dialog.dismiss());
-
         view.findViewById(R.id.btnAddTrail).setOnClickListener(v -> {
-            firestoreService.getAllTrails().addOnSuccessListener(querySnapshot -> {
-                List<Trail> allTrails = querySnapshot.toObjects(Trail.class);
+            firestoreService.getAllTrails().addOnSuccessListener(qs -> {
+                List<Trail> all = qs.toObjects(Trail.class);
                 List<Trail> available = new ArrayList<>();
-                for (Trail t : allTrails) {
-                    boolean selected = false;
-                    for (Trail st : selectedTrails) if (Objects.equals(st.getId(), t.getId())) { selected = true; break; }
-                    if (!selected) available.add(t);
+                for (Trail t : all) {
+                    boolean sel = false;
+                    for (Trail st : selectedTrails) if (st.getId().equals(t.getId())) { sel = true; break; }
+                    if (!sel) available.add(t);
                 }
                 String[] names = new String[available.size()];
                 for (int i=0; i<available.size(); i++) names[i] = available.get(i).getTitle();
-                new android.app.AlertDialog.Builder(this).setTitle("Adicionar Trilha").setItems(names, (d, which) -> {
+                new android.app.AlertDialog.Builder(this).setTitle("Adicionar").setItems(names, (d, which) -> {
                     selectedTrails.add(available.get(which));
-                    selectionAdapter.notifyItemInserted(selectedTrails.size() - 1);
+                    selectionAdapter.notifyItemInserted(selectedTrails.size()-1);
                 }).show();
             });
         });
@@ -398,32 +412,25 @@ public class RoadmapActivity extends AppCompatActivity {
             RoadMap rm = roadMap != null ? roadMap : new RoadMap();
             rm.setTitle(name);
             rm.setDescription(etDesc.getText().toString());
-            
+            if (roadMap != null) rm.setId(roadMap.getId());
+
             if (roadMap == null) {
                 firestoreService.addRoadMap(rm).addOnSuccessListener(ref -> {
-                    for (int i = 0; i < selectedTrails.size(); i++) {
-                        firestoreService.addMapTrail(new MapTrail(ref.getId(), selectedTrails.get(i).getId(), false, i + 1));
-                    }
-                    dialog.dismiss();
-                    loadAllRoadmaps();
+                    for (int i=0; i<selectedTrails.size(); i++) firestoreService.addMapTrail(new MapTrail(ref.getId(), selectedTrails.get(i).getId(), false, i+1));
+                    dialog.dismiss(); loadAllRoadmaps();
                 });
             } else {
                 firestoreService.updateRoadMap(rm).addOnSuccessListener(aVoid -> {
-                    // Sync Pivot: Clear and Rebuild
-                    firestoreService.getTrailsByRoadMap(roadMap.getId()).addOnSuccessListener(qs -> {
+                    firestoreService.getTrailsByRoadMap(rm.getId()).addOnSuccessListener(qs -> {
                         for (DocumentSnapshot doc : qs) firestoreService.deleteMapTrail(doc.getId());
-                        for (int i = 0; i < selectedTrails.size(); i++) {
-                            firestoreService.addMapTrail(new MapTrail(roadMap.getId(), selectedTrails.get(i).getId(), false, i + 1));
-                        }
+                        for (int i=0; i<selectedTrails.size(); i++) firestoreService.addMapTrail(new MapTrail(rm.getId(), selectedTrails.get(i).getId(), false, i+1));
                     });
-                    dialog.dismiss();
-                    loadAllRoadmaps();
+                    dialog.dismiss(); loadAllRoadmaps();
                 });
             }
         });
-
-        dialog.setContentView(view);
-        dialog.show();
+        view.findViewById(R.id.btnCancel).setOnClickListener(v -> dialog.dismiss());
+        dialog.setContentView(view); dialog.show();
     }
 
     private void showTrailFormDialog(Trail trail) {
@@ -437,7 +444,6 @@ public class RoadmapActivity extends AppCompatActivity {
         TextView btnSave = view.findViewById(R.id.btnSaveTrail);
 
         selectedActivities.clear();
-
         SelectionAdapter<Activity> selectionAdapter = new SelectionAdapter<>(selectedActivities, R.layout.item_activity_selection, Activity::getTitle, (item, position) -> {
             selectedActivities.remove(position);
             Objects.requireNonNull(rvSelected.getAdapter()).notifyItemRemoved(position);
@@ -462,48 +468,45 @@ public class RoadmapActivity extends AppCompatActivity {
             etDesc.setText(trail.getDescription());
             btnSave.setText("Salvar Alterações");
 
-            firestoreService.getActivitiesByTrail(trail.getId()).addOnSuccessListener(querySnapshot -> {
-                List<ActivityTrail> pivots = querySnapshot.toObjects(ActivityTrail.class);
+            firestoreService.getActivitiesByTrail(trail.getId()).addOnSuccessListener(qs -> {
+                List<ActivityTrail> pivots = qs.toObjects(ActivityTrail.class);
                 pivots.sort(Comparator.comparingInt(ActivityTrail::getOrder));
                 if (pivots.isEmpty()) return;
 
                 AtomicInteger count = new AtomicInteger(pivots.size());
-                Map<String, Activity> loadedActivities = new HashMap<>();
-
+                Map<String, Activity> loaded = new HashMap<>();
                 for (ActivityTrail p : pivots) {
                     firestoreService.getActivity(p.getActivityId()).addOnSuccessListener(doc -> {
-                        if (doc.exists()) {
-                            loadedActivities.put(p.getActivityId(), doc.toObject(Activity.class));
-                        }
+                        if (doc.exists()) loaded.put(p.getActivityId(), doc.toObject(Activity.class));
                         if (count.decrementAndGet() == 0) {
                             selectedActivities.clear();
                             for (ActivityTrail pivot : pivots) {
-                                Activity a = loadedActivities.get(pivot.getActivityId());
+                                Activity a = loaded.get(pivot.getActivityId());
                                 if (a != null) selectedActivities.add(a);
                             }
                             selectionAdapter.notifyDataSetChanged();
                         }
+                    }).addOnFailureListener(e -> {
+                        if (count.decrementAndGet() == 0) selectionAdapter.notifyDataSetChanged();
                     });
                 }
             });
         }
 
-        view.findViewById(R.id.btnCancel).setOnClickListener(v -> dialog.dismiss());
-
         view.findViewById(R.id.btnAddActivity).setOnClickListener(v -> {
-            firestoreService.getAllActivities().addOnSuccessListener(querySnapshot -> {
-                List<Activity> allActivities = querySnapshot.toObjects(Activity.class);
+            firestoreService.getAllActivities().addOnSuccessListener(qs -> {
+                List<Activity> all = qs.toObjects(Activity.class);
                 List<Activity> available = new ArrayList<>();
-                for (Activity a : allActivities) {
-                    boolean selected = false;
-                    for (Activity sa : selectedActivities) if (Objects.equals(sa.getId(), a.getId())) { selected = true; break; }
-                    if (!selected) available.add(a);
+                for (Activity a : all) {
+                    boolean sel = false;
+                    for (Activity sa : selectedActivities) if (sa.getId().equals(a.getId())) { sel = true; break; }
+                    if (!sel) available.add(a);
                 }
                 String[] names = new String[available.size()];
                 for (int i=0; i<available.size(); i++) names[i] = available.get(i).getTitle();
-                new android.app.AlertDialog.Builder(this).setTitle("Adicionar Atividade").setItems(names, (d, which) -> {
+                new android.app.AlertDialog.Builder(this).setTitle("Adicionar").setItems(names, (d, which) -> {
                     selectedActivities.add(available.get(which));
-                    selectionAdapter.notifyItemInserted(selectedActivities.size() - 1);
+                    selectionAdapter.notifyItemInserted(selectedActivities.size()-1);
                 }).show();
             });
         });
@@ -514,93 +517,52 @@ public class RoadmapActivity extends AppCompatActivity {
             Trail t = trail != null ? trail : new Trail();
             t.setTitle(name);
             t.setDescription(etDesc.getText().toString());
+            if (trail != null) t.setId(trail.getId());
 
             if (trail == null) {
                 firestoreService.addTrail(t).addOnSuccessListener(ref -> {
-                    for (int i = 0; i < selectedActivities.size(); i++) {
-                        firestoreService.addActivityTrail(new ActivityTrail(selectedActivities.get(i).getId(), ref.getId(), false, i + 1));
-                    }
-                    dialog.dismiss();
-                    loadAllTrails();
+                    for (int i=0; i<selectedActivities.size(); i++) firestoreService.addActivityTrail(new ActivityTrail(selectedActivities.get(i).getId(), ref.getId(), false, i+1));
+                    dialog.dismiss(); loadAllTrails();
                 });
             } else {
                 firestoreService.updateTrail(t).addOnSuccessListener(aVoid -> {
-                    firestoreService.getActivitiesByTrail(trail.getId()).addOnSuccessListener(qs -> {
+                    firestoreService.getActivitiesByTrail(t.getId()).addOnSuccessListener(qs -> {
                         for (DocumentSnapshot doc : qs) firestoreService.deleteActivityTrail(doc.getId());
-                        for (int i = 0; i < selectedActivities.size(); i++) {
-                            firestoreService.addActivityTrail(new ActivityTrail(selectedActivities.get(i).getId(), trail.getId(), false, i + 1));
-                        }
+                        for (int i=0; i<selectedActivities.size(); i++) firestoreService.addActivityTrail(new ActivityTrail(selectedActivities.get(i).getId(), t.getId(), false, i+1));
                     });
-                    dialog.dismiss();
-                    loadAllTrails();
+                    dialog.dismiss(); loadAllTrails();
                 });
             }
         });
-
-        dialog.setContentView(view);
-        dialog.show();
+        view.findViewById(R.id.btnCancel).setOnClickListener(v -> dialog.dismiss());
+        dialog.setContentView(view); dialog.show();
     }
 
     private void showActivityFormDialog(Activity activity) {
         BottomSheetDialog dialog = new BottomSheetDialog(this);
         View view = getLayoutInflater().inflate(R.layout.dialog_form_create_activity, null);
-
-        TextView tvDialogTitle = view.findViewById(R.id.tvDialogTitle);
         EditText etName = view.findViewById(R.id.etActivityName);
         EditText etDesc = view.findViewById(R.id.etActivityDesc);
-        RecyclerView rvQuestions = view.findViewById(R.id.rvQuestions);
-        TextView btnAddQuestion = view.findViewById(R.id.btnAddQuestion);
-        TextView btnSave = view.findViewById(R.id.btnSaveActivity);
-
-        List<Question> questionsList = new ArrayList<>();
-        if (activity != null && activity.getQuestions() != null) {
-            questionsList.addAll(activity.getQuestions());
-        } else if (activity == null) {
-            questionsList.add(new Question("", Arrays.asList("", "", "", ""), 0));
-        }
-
-        com.example.growmapapp.adapter.QuestionFormAdapter adapter = new com.example.growmapapp.adapter.QuestionFormAdapter(questionsList);
-        rvQuestions.setLayoutManager(new LinearLayoutManager(this));
-        rvQuestions.setAdapter(adapter);
-
         if (activity != null) {
-            tvDialogTitle.setText("Editar Atividade");
+            ((TextView)view.findViewById(R.id.tvDialogTitle)).setText("Editar Atividade");
             etName.setText(activity.getTitle());
             etDesc.setText(activity.getDescription());
-            btnSave.setText("Salvar Alterações");
         }
-
-        btnAddQuestion.setOnClickListener(v -> {
-            questionsList.add(new Question("", Arrays.asList("", "", "", ""), 0));
-            adapter.notifyItemInserted(questionsList.size() - 1);
-        });
-
-        view.findViewById(R.id.btnCancel).setOnClickListener(v -> dialog.dismiss());
-
-        btnSave.setOnClickListener(v -> {
+        view.findViewById(R.id.btnSaveActivity).setOnClickListener(v -> {
             String name = etName.getText().toString().trim();
             if (name.isEmpty()) return;
-
             Activity act = activity != null ? activity : new Activity();
-            act.setTitle(name);
-            act.setDescription(etDesc.getText().toString());
-            act.setQuestions(questionsList);
-            act.setType("quiz");
-
-            if (activity == null) {
-                firestoreService.addActivity(act).addOnSuccessListener(ref -> {
-                    dialog.dismiss();
-                    loadAllActivities();
-                });
-            } else {
-                firestoreService.updateActivity(act).addOnSuccessListener(aVoid -> {
-                    dialog.dismiss();
-                    loadAllActivities();
-                });
-            }
+            act.setTitle(name); act.setDescription(etDesc.getText().toString());
+            if (activity != null) act.setId(activity.getId());
+            if (activity == null) firestoreService.addActivity(act).addOnSuccessListener(ref -> { dialog.dismiss(); loadAllActivities(); });
+            else firestoreService.updateActivity(act).addOnSuccessListener(aVoid -> { dialog.dismiss(); loadAllActivities(); });
         });
+        view.findViewById(R.id.btnCancel).setOnClickListener(v -> dialog.dismiss());
+        dialog.setContentView(view); dialog.show();
+    }
 
-        dialog.setContentView(view);
-        dialog.show();
+    static class RoadmapTab {
+        String id, name, icon;
+        RoadmapTab(String id, String name, String icon) { this.id = id; this.name = name; this.icon = icon; }
     }
 }
