@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/bg_dark">
 
-    <!-- Top Navbar (Fiel ao RoadmapActivity, com padding maior para descer os itens) -->
+    <!-- Top Navbar -->
     <LinearLayout
         android:id="@+id/topNavbar"
         android:layout_width="match_parent"
@@ -19,94 +19,65 @@
         android:gravity="center_vertical"
         android:layout_alignParentTop="true">
 
-        <!-- TOP BAR (DINÂMICO) -->
+        <TextView
+            android:id="@+id/tvHeaderAvatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_avatar"
+            android:gravity="center"
+            android:text="K"
+            android:textColor="@color/accent_cyan"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:padding="16dp">
-
-            <FrameLayout
-                android:id="@+id/btnBack"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:background="@drawable/bg_avatar_cyan"
-                android:clickable="true"
-                android:focusable="true">
-                <TextView
-                    android:id="@+id/userAvatar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="U"
-                    android:textColor="@color/text_primary"
-                    android:textStyle="bold"
-                    android:textSize="18sp"/>
-            </FrameLayout>
-
-            <LinearLayout
-                android:id="@+id/userInfoHeader"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="10dp"
-                android:orientation="vertical">
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/userNameFirst"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Usuário "
-                        android:textColor="@color/cyan"
-                        android:textStyle="bold"
-                        android:textSize="14sp"/>
-                    <TextView
-                        android:id="@+id/userNameLast"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:textColor="@color/text_primary"
-                        android:textStyle="bold"
-                        android:textSize="14sp"/>
-                </LinearLayout>
-                <TextView
-                    android:id="@+id/userRole"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Cargo"
-                    android:textColor="@color/text_muted"
-                    android:textSize="11sp"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <!-- TITLE -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp">
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:orientation="vertical">
             <TextView
-                android:id="@+id/tvRoadmapTitle"
+                android:id="@+id/tvHeaderUserName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Minha Jornada"
-                android:textColor="@color/text_primary"
-                android:textSize="26sp"
-                android:textStyle="bold"/>
+                android:text="Carregando..."
+                android:textColor="@color/accent_cyan"
+                android:textStyle="bold"
+                android:textSize="14sp"/>
+            <TextView
+                android:id="@+id/tvHeaderUserRole"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="..."
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp"/>
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/btnThemeToggle"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="6dp"
+            android:src="@drawable/ic_moon"
+            app:tint="@color/accent_cyan"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Alternar Tema"/>
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/topNavbar"
+        android:fillViewport="true">
+
         <LinearLayout
-            android:id="@+id/roadmapContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="20dp"
             android:paddingBottom="32dp">
-
-            <!-- Conteúdo Dinâmico será inserido aqui -->
 
             <!-- Botão Voltar -->
             <TextView
@@ -151,51 +122,14 @@
                     android:paddingVertical="30dp"
                     android:background="@drawable/bg_roadmap_panel">
 
-                    <!-- Nó de Chegada -->
+                    <!-- Nó de Início -->
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:orientation="vertical"
                         android:gravity="center"
-                        android:layout_marginBottom="10dp">
-                        <FrameLayout
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:background="@drawable/bg_avatar_cyan">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:text="🏁"
-                                android:textSize="22sp"/>
-                        </FrameLayout>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="CHEGADA"
-                            android:textColor="@color/accent_cyan"
-                            android:textSize="10sp"
-                            android:textStyle="bold"
-                            android:letterSpacing="0.1"/>
-                    </LinearLayout>
-
-                    <!-- Lista Dinâmica -->
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvTrailPath"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false" />
-
-                    <!-- Nó de Início -->
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:layout_gravity="center_horizontal"
-                        android:orientation="vertical"
-                        android:gravity="center">
+                        android:layout_marginBottom="20dp">
                         <FrameLayout
                             android:layout_width="64dp"
                             android:layout_height="64dp"
@@ -215,6 +149,43 @@
                             android:text="INÍCIO"
                             android:textColor="@color/text_primary"
                             android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.1"/>
+                    </LinearLayout>
+
+                    <!-- Lista Dinâmica -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvTrailPath"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false" />
+
+                    <!-- Nó de Chegada -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_gravity="center_horizontal"
+                        android:orientation="vertical"
+                        android:gravity="center">
+                        <FrameLayout
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/bg_avatar_cyan">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="🏁"
+                                android:textSize="22sp"/>
+                        </FrameLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="CHEGADA"
+                            android:textColor="@color/accent_cyan"
+                            android:textSize="10sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.1"/>
                     </LinearLayout>
