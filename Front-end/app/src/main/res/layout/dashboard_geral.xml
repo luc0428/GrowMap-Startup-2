@@ -74,6 +74,9 @@
             android:textSize="14sp" />
 
         <!-- Lista Finalizados -->
+
+        <!-- Busca Em Progresso -->
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_finished"
             android:layout_width="match_parent"
@@ -82,7 +85,6 @@
             android:clipToPadding="false"
             android:paddingBottom="8dp" />
 
-        <!-- Busca Em Progresso -->
         <EditText
             android:id="@+id/search_in_progress"
             android:layout_width="match_parent"

@@ -1,20 +1,26 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/bg_dark">
 
-    <!-- Header -->
+    <!-- Top Navbar (Novo Padrão) -->
     <LinearLayout
+        android:id="@+id/topNavbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/bg_header"
         android:orientation="horizontal"
-        android:padding="16dp"
-        android:gravity="center_vertical">
+        android:paddingTop="32dp"
+        android:paddingBottom="17dp"
+        android:paddingStart="17dp"
+        android:paddingEnd="17dp"
+        android:gravity="center_vertical"
+        android:layout_alignParentTop="true">
 
         <TextView
+            android:id="@+id/userAvatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/bg_avatar"
@@ -22,43 +28,120 @@
             android:text="K"
             android:textColor="@color/accent_cyan"
             android:textSize="18sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true"/>
 
         <LinearLayout
+            android:id="@+id/userInfoHeader"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="12dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true">
             <TextView
+                android:id="@+id/userName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Kauan Davi"
+                android:text="Carregando..."
                 android:textColor="@color/accent_cyan"
                 android:textStyle="bold"
                 android:textSize="14sp"/>
             <TextView
+                android:id="@+id/userRole"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Analista de TI"
+                android:text="..."
                 android:textColor="@color/text_secondary"
                 android:textSize="11sp"/>
         </LinearLayout>
 
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="Dashboard" android:textColor="@color/text_primary"
-            android:textSize="13sp" android:layout_marginEnd="16dp"/>
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="Cursos" android:textColor="@color/text_primary"
-            android:textSize="13sp" android:layout_marginEnd="16dp"/>
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="Suporte" android:textColor="@color/text_primary"
-            android:textSize="13sp"/>
+        <!-- Manager Dashboard Button (Sempre Visível para Visualização) -->
+        <ImageView
+            android:id="@+id/btnManagerDashboard"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="6dp"
+            android:src="@drawable/ic_brain"
+            app:tint="@color/accent_cyan"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone"
+            android:contentDescription="Dashboard Gestor" />
+
+        <ImageView
+            android:id="@+id/btnThemeToggle"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Alternar Tema"
+            android:padding="6dp"
+            android:src="@drawable/ic_moon"
+            app:tint="@color/accent_cyan"
+            android:clickable="true"
+            android:focusable="true"/>
     </LinearLayout>
 
-    <ScrollView
+    <!-- Bottom Navbar (Novo Padrão) -->
+    <LinearLayout
+        android:id="@+id/bottomNavbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/bg_header"
+        android:orientation="horizontal"
+        android:paddingVertical="22dp"
+        android:gravity="center_vertical"
+        android:elevation="8dp">
+
+        <LinearLayout
+            android:id="@+id/btnNavHome"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🏠" android:textSize="20sp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Home" android:textColor="@color/accent_cyan" android:textSize="10sp" android:textStyle="bold"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btnNavRoadmap"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🗺️" android:textSize="20sp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Roadmap" android:textColor="@color/text_secondary" android:textSize="10sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btnNavSuporte"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="💬" android:textSize="20sp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Suporte" android:textColor="@color/text_secondary" android:textSize="10sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/topNavbar"
+        android:layout_above="@id/bottomNavbar"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -66,97 +149,128 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <!-- Voltar -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_back"
-                android:paddingHorizontal="14dp"
-                android:paddingVertical="8dp"
-                android:text="‹ Voltar para o Dashboard"
-                android:textColor="@color/text_primary"
-                android:textSize="12sp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="Praticar"
-                android:textColor="@color/text_primary"
-                android:textSize="24sp"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Escolha um tópico e teste seu conhecimento."
-                android:textColor="@color/text_secondary"
-                android:textSize="13sp"/>
-
-            <!-- Grid de Quizzes -->
-            <androidx.gridlayout.widget.GridLayout
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+            <!-- Hero: Nota Geral (Mantendo a "Ideia" da Dashboard anterior) -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                app:columnCount="2"
-                app:useDefaultMargins="true">
+                android:background="@drawable/bg_card_darkblue"
+                android:orientation="horizontal"
+                android:padding="20dp"
+                android:gravity="center_vertical">
 
-                <include layout="@layout/item_quiz_card" android:id="@+id/quizJava"/>
-                <include layout="@layout/item_quiz_card" android:id="@+id/quizPython"/>
-                <include layout="@layout/item_quiz_card" android:id="@+id/quizExcel"/>
-                <include layout="@layout/item_quiz_card" android:id="@+id/quizO365"/>
-                <include layout="@layout/item_quiz_card" android:id="@+id/quizSql"/>
-            </androidx.gridlayout.widget.GridLayout>
+                <RelativeLayout
+                    android:layout_width="80dp"
+                    android:layout_height="80dp">
+                    <ProgressBar
+                        android:id="@+id/donutProgress"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:indeterminate="false"
+                        android:max="100"
+                        android:progress="83"
+                        android:progressDrawable="@drawable/bg_donut" />
+                    <TextView
+                        android:id="@+id/txtOverallScore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="83%"
+                        android:textColor="@color/text_primary"
+                        android:textSize="16sp"
+                        android:textStyle="bold"/>
+                </RelativeLayout>
 
-            <!-- Histórico -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="16dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Desempenho Geral"
+                        android:textColor="@color/accent_cyan"
+                        android:textSize="14sp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Você está evoluindo! Complete os quizzes para aumentar sua pontuação."
+                        android:textColor="@color/text_secondary"
+                        android:textSize="11sp"
+                        android:layout_marginTop="4dp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Praticar Quizzes"
+                android:textColor="@color/text_primary"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+
+            <!-- Grid de Quizzes / Cards Dinâmicos -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvQuizzes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:nestedScrollingEnabled="false"
+                android:clipToPadding="false"
+                android:paddingEnd="16dp"/>
+
+            <!-- Seção: Histórico de Tentativas -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:background="@drawable/bg_card_DarkBlue"
+                android:background="@drawable/bg_card_darkblue"
                 android:orientation="vertical"
                 android:padding="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Meu Histórico de Tentativas"
+                    android:text="Histórico Recente"
                     android:textColor="@color/text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:orientation="horizontal">
-                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                        android:layout_weight="3" android:text="Quiz"
-                        android:textColor="@color/text_secondary" android:textSize="12sp"/>
-                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                        android:layout_weight="1" android:text="Acertos"
-                        android:textColor="@color/text_secondary" android:textSize="12sp"/>
-                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                        android:layout_weight="1" android:text="%"
-                        android:textColor="@color/text_secondary" android:textSize="12sp"/>
-                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                        android:layout_weight="1" android:text="Data"
-                        android:textColor="@color/text_secondary" android:textSize="12sp"
-                        android:gravity="end"/>
-                </LinearLayout>
-
-                <View android:layout_width="match_parent" android:layout_height="1dp"
-                    android:layout_marginTop="8dp" android:background="@drawable/divider"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvHistorico"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="12dp"
                     android:nestedScrollingEnabled="false"/>
             </LinearLayout>
+
+            <!-- Estatísticas do Setor (Preservando a ideia original no final) -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="Estatísticas do Setor"
+                android:textColor="@color/text_muted"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:textAllCaps="true"/>
+
+            <com.example.growmapapp.LineChartView
+                android:id="@+id/lineChart"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="40dp"
+                android:background="@drawable/bg_card_darkblue"
+                android:padding="16dp"/>
+
         </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+</RelativeLayout>

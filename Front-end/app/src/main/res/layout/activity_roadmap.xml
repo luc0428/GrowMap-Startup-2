@@ -1,373 +1,340 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_dark"
-    android:fillViewport="true">
+    android:background="@color/bg_dark">
 
+    <!-- Top Navbar (Padrão Dashboard) -->
     <LinearLayout
+        android:id="@+id/topNavbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="32dp">
+        android:background="@color/bg_header"
+        android:orientation="horizontal"
+        android:paddingTop="32dp"
+        android:paddingBottom="17dp"
+        android:paddingStart="17dp"
+        android:paddingEnd="17dp"
+        android:gravity="center_vertical"
+        android:layout_alignParentTop="true">
 
-        <!-- TOP BAR -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:padding="16dp">
-
-            <FrameLayout
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:background="@drawable/bg_avatar_cyan">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="K"
-                    android:textColor="@color/text_primary"
-                    android:textStyle="bold"
-                    android:textSize="18sp"/>
-            </FrameLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="10dp"
-                android:orientation="vertical">
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Kauan "
-                        android:textColor="@color/cyan"
-                        android:textStyle="bold"
-                        android:textSize="14sp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Davi"
-                        android:textColor="@color/text_primary"
-                        android:textStyle="bold"
-                        android:textSize="14sp"/>
-                </LinearLayout>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Analista de TI"
-                    android:textColor="@color/text_muted"
-                    android:textSize="11sp"/>
-            </LinearLayout>
-
-            <ImageView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:padding="6dp"
-                android:background="@drawable/bg_back"
-                android:src="@drawable/ic_sun"/>
-            <ImageView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginStart="8dp"
-                android:padding="6dp"
-                android:background="@drawable/bg_back"
-                android:src="@drawable/ic_logout"/>
-        </LinearLayout>
-
-        <!-- NAV -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:paddingBottom="8dp">
-            <TextView style="@style/NavItem" android:text="Dashboard"/>
-            <TextView style="@style/NavItem" android:text="Cursos"/>
-            <TextView style="@style/NavItem" android:text="Suporte"/>
-        </LinearLayout>
-
-        <!-- BACK -->
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/bg_back"
-            android:paddingHorizontal="14dp"
-            android:paddingVertical="8dp"
-            android:text="‹ Voltar para o Dashboard"
-            android:textColor="@color/text_muted"
-            android:textSize="13sp"/>
+            android:id="@+id/userAvatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_avatar"
+            android:gravity="center"
+            android:text="K"
+            android:textColor="@color/accent_cyan"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true"/>
 
-        <!-- TITLE + CTA -->
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/userInfoHeader"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:padding="16dp">
-
-            <LinearLayout
-                android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true">
+            <TextView
+                android:id="@+id/userName"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Meus Road Maps"
-                    android:textColor="@color/text_primary"
-                    android:textSize="26sp"
-                    android:textStyle="bold"/>
-            </LinearLayout>
-
+                android:text="Carregando..."
+                android:textColor="@color/accent_cyan"
+                android:textStyle="bold"
+                android:textSize="14sp"/>
+            <TextView
+                android:id="@+id/userRole"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="..."
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp"/>
         </LinearLayout>
 
-        <!-- TABS -->
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="none"
-            android:paddingHorizontal="16dp">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView style="@style/Tab" android:background="@drawable/bg_tab_active" android:text="☕  Java"/>
-                <TextView style="@style/Tab" android:background="@drawable/bg_tab" android:text="🦆  Python"/>
-                <TextView style="@style/Tab" android:background="@drawable/bg_tab" android:text="📊  Excel"/>
-                <TextView style="@style/Tab" android:background="@drawable/bg_tab" android:text="📄  Office 365"/>
-            </LinearLayout>
-        </HorizontalScrollView>
+        <ImageView
+            android:id="@+id/btnThemeToggle"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Alternar Tema"
+            android:padding="6dp"
+            android:src="@drawable/ic_moon"
+            app:tint="@color/accent_cyan"
+            android:clickable="true"
+            android:focusable="true"/>
+    </LinearLayout>
 
-        <!-- ROADMAP PANEL -->
+    <!-- Bottom Navbar (Padrão Dashboard) -->
+    <LinearLayout
+        android:id="@+id/bottomNavbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/bg_header"
+        android:orientation="horizontal"
+        android:paddingVertical="22dp"
+        android:gravity="center_vertical"
+        android:elevation="8dp">
+
+        <LinearLayout
+            android:id="@+id/btnNavHome"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🏠" android:textSize="20sp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Home" android:textColor="@color/text_secondary" android:textSize="10sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btnNavRoadmap"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🗺️" android:textSize="20sp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Roadmap" android:textColor="@color/accent_cyan" android:textSize="10sp" android:textStyle="bold"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btnNavSuporte"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="💬" android:textSize="20sp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Suporte" android:textColor="@color/text_secondary" android:textSize="10sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/topNavbar"
+        android:layout_above="@id/bottomNavbar"
+        android:fillViewport="true">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/bg_roadmap_panel"
             android:orientation="vertical"
-            android:paddingVertical="24dp">
+            android:paddingHorizontal="20dp"
+            android:paddingBottom="32dp">
 
-            <!-- TOP TARGET -->
-            <LinearLayout
+            <!-- Back Button -->
+            <TextView
+                android:id="@+id/btnBackToDashboard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:orientation="vertical"
-                android:gravity="center">
-                <FrameLayout
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    android:background="@drawable/bg_target">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_target"/>
-                </FrameLayout>
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_back"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:text="‹ Voltar para o Dashboard"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                android:clickable="true"
+                android:focusable="true"/>
+
+            <!-- TITLE & CREATE BUTTON -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
                 <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Meus Roadmaps"
+                    android:textColor="@color/text_primary"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="-0.02" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCreateRoad"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:text="Role para cima e suba na sua jornada!"
-                    android:textColor="@color/cyan"
-                    android:textSize="11sp"
-                    android:textStyle="bold"/>
+                    android:text="Novo"
+                    app:icon="@android:drawable/ic_input_add"
+                    android:textAllCaps="false"
+                    android:backgroundTint="@color/accent_cyan"
+                    app:cornerRadius="12dp"
+                    android:paddingHorizontal="16dp" />
             </LinearLayout>
 
-            <!-- ROW: locked node (left/center) + Orientação a Objetos card (right) -->
+            <!-- FILTROS PRINCIPAIS -->
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="24dp"
+                android:gravity="center">
+
+                <LinearLayout
+                    android:id="@+id/filterRoadmaps"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="12dp"
+                    android:background="@drawable/bg_card_darkblue">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🗺️" android:textSize="24sp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="RoadMap" android:textColor="@android:color/white" android:textSize="10sp" android:textStyle="bold"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/filterTrails"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="12dp"
+                    android:background="@drawable/bg_card_alt">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="📚" android:textSize="24sp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Trilhas" android:textColor="@color/text_secondary" android:textSize="10sp" android:textStyle="bold"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/filterActivities"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="12dp"
+                    android:background="@drawable/bg_card_alt">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="📝" android:textSize="24sp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tarefas" android:textColor="@color/text_secondary" android:textSize="10sp" android:textStyle="bold"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- TABS (Filtro por Roadmap) -->
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="16dp">
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"/>
-
-                <FrameLayout
-                    android:layout_width="60dp"
-                    android:layout_height="60dp">
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/bg_node_glow_yellow"/>
-                    <FrameLayout
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/bg_node_locked">
-                        <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_lock"/>
-                    </FrameLayout>
-                </FrameLayout>
-
+                android:scrollbars="none">
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.4"
-                    android:layout_marginStart="12dp"
-                    android:background="@drawable/bg_module_card"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="12dp">
-                    <ImageView
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/ic_key"/>
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="10dp"
-                        android:orientation="vertical">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Orientação a Objetos"
-                            android:textColor="@color/text_primary"
-                            android:textStyle="bold"
-                            android:textSize="13sp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Classes, Herança, Polimorfismo."
-                            android:textColor="@color/text_muted"
-                            android:textSize="11sp"/>
-                    </LinearLayout>
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:src="@drawable/ic_arrow_right"/>
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- ROW: Lógica card (left) + hourglass node (right/center) -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="16dp">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.4"
-                    android:background="@drawable/bg_module_card"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="12dp">
-                    <ImageView
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/ic_brain"/>
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="10dp"
-                        android:orientation="vertical">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Lógica e Fundamentos"
-                            android:textColor="@color/text_primary"
-                            android:textStyle="bold"
-                            android:textSize="13sp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Sintaxe básica, variáveis, loops."
-                            android:textColor="@color/text_muted"
-                            android:textSize="11sp"/>
-                    </LinearLayout>
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:src="@drawable/ic_arrow_right"/>
-                </LinearLayout>
-
-                <FrameLayout
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginStart="12dp">
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/bg_node_glow_purple"/>
-                    <FrameLayout
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/bg_node_inprogress">
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_hourglass"/>
-                    </FrameLayout>
-                </FrameLayout>
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"/>
-            </LinearLayout>
-
-            <!-- START NODE -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="56dp"
-                android:layout_gravity="center_horizontal"
-                android:orientation="vertical"
-                android:gravity="center">
-                <FrameLayout
-                    android:layout_width="76dp"
-                    android:layout_height="76dp">
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/bg_node_glow_cyan"/>
-                    <FrameLayout
-                        android:layout_width="62dp"
-                        android:layout_height="62dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/bg_node_start">
-                        <ImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_rocket"/>
-                    </FrameLayout>
-                </FrameLayout>
-                <TextView
+                    android:id="@+id/roadmapTabsContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="Início da Jornada"
-                    android:textColor="@color/text_primary"
-                    android:textSize="14sp"
-                    android:textStyle="bold"/>
-            </LinearLayout>
+                    android:orientation="horizontal"
+                    android:paddingVertical="4dp">
+                    <!-- Gerado dinamicamente via Java -->
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <!-- PROGRESS SUMMARY (UX Booster) -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/bg_card_alt">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+                    <ProgressBar
+                        android:id="@+id/roadmapProgress"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:progressDrawable="@drawable/bg_donut"
+                        android:progress="65" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/tvProgressPercent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="65% concluído"
+                            android:textColor="@color/text_primary"
+                            android:textStyle="bold"
+                            android:textSize="16sp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Faltam 4 tarefas para o próximo nível"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- JORNADA (TRILHA DE APRENDIZADO) -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/bg_card">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp"
+                    android:background="@drawable/bg_roadmap_panel">
+
+                    <TextView
+                        android:id="@+id/tvJornadaTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="20dp"
+                        android:text="Jornada Java Developer"
+                        android:textColor="@color/accent_cyan"
+                        android:textStyle="bold"
+                        android:textSize="18sp"/>
+
+                    <!-- Lista de Atividades da Trilha -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvRoadmapSteps"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"/>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
         </LinearLayout>
-    </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
+</RelativeLayout>

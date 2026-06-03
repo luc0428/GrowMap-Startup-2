@@ -35,6 +35,7 @@
 
         <!-- Email -->
         <EditText
+            android:id="@+id/editEmail"
             android:hint="Email"
             android:textColor="#000"
             android:layout_width="match_parent"
@@ -42,6 +43,7 @@
 
         <!-- Senha -->
         <EditText
+            android:id="@+id/editPassword"
             android:hint="Password"
             android:textColor="#000"
             android:layout_width="match_parent"
@@ -58,6 +60,16 @@
             android:textColor="#FFFFFF"
             android:layout_marginTop="24dp"
             android:background="@drawable/btn_gradient"/>
+
+        <!-- Link para Cadastro -->
+        <TextView
+            android:id="@+id/txtGoToRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Don't have an account? Sign up"
+            android:textColor="#666"
+            android:gravity="center"
+            android:layout_marginTop="16dp"/>
 
     </LinearLayout>
 

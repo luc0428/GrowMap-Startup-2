@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@color/bg_dark">
+
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:background="@color/divider"
+        android:alpha="0.3"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="O que deseja criar?"
+        android:textColor="@color/text_primary"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp"/>
+
+    <!-- Opção: Criar RoadMaps -->
+    <LinearLayout
+        android:id="@+id/optionCreateRoadmap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_card_darkblue"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:layout_marginBottom="12dp"
+        android:gravity="center_vertical"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_card"
+            android:gravity="center"
+            android:text="🗺️"
+            android:textSize="24sp"
+            android:alpha="0.9"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Criar RoadMaps"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"
+                android:textSize="14sp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="A criação de Roadmaps para o seu time, facilitando o acompanhamento."
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp"/>
+
+            <TextView
+                android:id="@+id/btnEnterCreateRoadmap"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_badge_orange"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:text="Criar"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Opção: Criar Trilhas -->
+    <LinearLayout
+        android:id="@+id/optionCreateTrail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_card_darkblue"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:layout_marginBottom="12dp"
+        android:gravity="center_vertical"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_card"
+            android:gravity="center"
+            android:text="📚"
+            android:textSize="24sp"
+            android:alpha="0.9"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Criar Trilhas"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"
+                android:textSize="14sp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Estruture um caminho com conjunto de tarefas e roadmap personalizado."
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp"/>
+
+            <TextView
+                android:id="@+id/btnEnterCreateTrail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_badge_orange"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:text="Criar"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Opção: Criar Tarefa -->
+    <LinearLayout
+        android:id="@+id/optionCreateTask"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_card_darkblue"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:layout_marginBottom="12dp"
+        android:gravity="center_vertical"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:id="@+id/iconTask"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_card"
+            android:gravity="center"
+            android:text="📝"
+            android:textSize="24sp"
+            android:alpha="0.9"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Criar Tarefa"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"
+                android:textSize="14sp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Crie tarefas personalizadas em formato de projetos com pontuação."
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp"/>
+
+            <TextView
+                android:id="@+id/btnEnterCreateTask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_badge_orange"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:text="Criar"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

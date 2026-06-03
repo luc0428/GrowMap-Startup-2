@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootRow"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingVertical="12dp"
+    android:baselineAligned="false">
+
+    <!-- Spacer ou Card (Esquerda) -->
+    <FrameLayout
+        android:id="@+id/cardContainerLeft"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+        <include layout="@layout/item_roadmap_node_card" />
+    </FrameLayout>
+
+    <!-- Nó Central -->
+    <LinearLayout
+        android:id="@+id/nodeContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginHorizontal="12dp">
+
+        <FrameLayout
+            android:layout_width="60dp"
+            android:layout_height="60dp">
+            <View
+                android:id="@+id/nodeGlow"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_node_glow_yellow"/>
+            <FrameLayout
+                android:id="@+id/nodeBg"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_node_locked">
+                <ImageView
+                    android:id="@+id/iconNode"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_lock"/>
+            </FrameLayout>
+        </FrameLayout>
+    </LinearLayout>
+
+    <!-- Spacer ou Card (Direita) -->
+    <FrameLayout
+        android:id="@+id/cardContainerRight"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+        <include layout="@layout/item_roadmap_node_card" />
+    </FrameLayout>
+
+</LinearLayout>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "438948916686",
+    "project_id": "growmap-f06b3",
+    "storage_bucket": "growmap-f06b3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:438948916686:android:090bb82061a752fe71cf9f",
+        "android_client_info": {
+          "package_name": "com.example.growmapapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6Qg9pJBxCWYhU8qimrUSDYnIySGtdDco"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

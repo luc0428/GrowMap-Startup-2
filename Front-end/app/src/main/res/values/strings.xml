@@ -1,3 +1,25 @@
 <resources>
-    <string name="app_name">GrowMapApp</string>
+    <string name="app_name">GrowMap</string>
+
+    <string name="gerenciamento_de_usuarios">Gerenciamento de Usuários</string>
+    <string name="buscar_hint">Buscar usuário...</string>
+    <string name="add_colaborador">Adicionar</string>
+
+    <string name="nota_geral">Nota geral</string>
+    <string name="nota_geral_val">8.3</string>
+    <string name="colaboradores">Colaboradores</string>
+    <string name="cursos_finalizados">Cursos Finalizados</string>
+    <string name="engajamento">Engajamento</string>
+    <string name="frequencia_tarefas">Frequência de Tarefas</string>
+    <string name="setor_ti">Setor TI</string>
+    <string name="num_colaboradores">745</string>
+    <string name="meta_batida_percent">82%</string>
+    <string name="meta_batida">Meta Batida</string>
+    <string name="em_andamento">Em Andamento</string>
+    <string name="tempo_de_empresa">Tempo de empresa</string>
+    <string name="ver_perfil">Ver perfil</string>
+
+    <string name="score_format">%d%%</string>
+    <string name="enviar">Enviar</string>
+    <string name="hint_mensagem">Escreva sua mensagem...</string>
 </resources>

@@ -1,96 +1,217 @@
-package com.example.novatelaupx;
+package com.example.growmapapp;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
-import androidx.activity.EdgeToEdge;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import java.util.ArrayList;
-import java.util.List;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class GerenciarUser extends AppCompatActivity {
 
-    private UserAdapter adapter;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+
+    private String targetUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.gerenciar_user);
+        setContentView(R.layout.activity_gerenciar_user);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
-        setupToolbar();
-        setupRecyclerView();
-        setupSearch();
-    }
-
-    private void setupToolbar() {
-        ImageView btnThemeToggle = findViewById(R.id.btnThemeToggle);
-
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-            btnThemeToggle.setImageResource(android.R.drawable.ic_menu_day); // Icon de Sol
-        } else {
-            btnThemeToggle.setImageResource(android.R.drawable.ic_menu_recent_history); // Icon de Lua
+        if (getIntent().hasExtra("userId")) {
+            targetUserId = getIntent().getStringExtra("userId");
+        } else if (mAuth.getCurrentUser() != null) {
+            targetUserId = mAuth.getCurrentUser().getUid();
         }
 
-        btnThemeToggle.setOnClickListener(v -> {
-            int currentMode = AppCompatDelegate.getDefaultNightMode();
-            if (currentMode == AppCompatDelegate.MODE_NIGHT_YES) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            }
-            recreate();
-        });
+        setupNavbar();
+        setupActions();
+        loadUserInfo();
     }
 
-    private void setupSearch() {
-        EditText etSearch = findViewById(R.id.etSearch);
-        etSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+    private void loadUserInfo() {
+        if (targetUserId == null) return;
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (adapter != null) {
-                    adapter.filter(s.toString());
+        db.collection("user").document(targetUserId).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null && task.getResult().exists()) {
+                        String name = task.getResult().getString("fullname");
+                        String role = task.getResult().getString("role");
+                        String cargo = task.getResult().getString("cargo");
+                        String email = task.getResult().getString("gmail");
+                        if (email == null) email = task.getResult().getString("email");
+
+                        TextView userName = findViewById(R.id.userName);
+                        TextView userRole = findViewById(R.id.userRole);
+                        TextView userAvatar = findViewById(R.id.userAvatar);
+                        EditText etName = findViewById(R.id.etName);
+                        android.widget.Spinner spinnerRole = findViewById(R.id.spinnerRole);
+                        EditText etEmail = findViewById(R.id.etEmail);
+
+                        if (userName != null && name != null) userName.setText(name);
+                        
+                        String displayRole = (cargo != null && !cargo.isEmpty()) ? cargo : role;
+                        if (userRole != null && displayRole != null) userRole.setText(displayRole);
+                        
+                        if (userAvatar != null && name != null && !name.isEmpty()) {
+                            userAvatar.setText(String.valueOf(name.charAt(0)).toUpperCase());
+                        }
+
+                        if (etName != null && name != null) etName.setText(name);
+                        
+                        if (spinnerRole != null) {
+                            String[] roles = {"Desenvolvedor", "Analista", "Gestor", "Designer", "QA", "Analista de TI", "Suporte"};
+                            android.widget.ArrayAdapter<String> adapter = new android.widget.ArrayAdapter<>(this, android.R.layout.simple_spinner_item, roles);
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            spinnerRole.setAdapter(adapter);
+                            
+                            if (displayRole != null) {
+                                for (int i = 0; i < roles.length; i++) {
+                                    if (roles[i].equalsIgnoreCase(displayRole)) {
+                                        spinnerRole.setSelection(i);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        if (etEmail != null && email != null) {
+                            etEmail.setText(email);
+                            etEmail.setEnabled(false);
+                            etEmail.setAlpha(0.6f);
+                        }
+                    }
+                });
+    }
+
+    private void setupActions() {
+        View btnBack = findViewById(R.id.userAvatar); // Reusing avatar as back or just keep standard
+        
+        View btnUpdate = findViewById(R.id.btnUpdate);
+        if (btnUpdate != null) {
+            btnUpdate.setOnClickListener(v -> saveUserData());
+        }
+    }
+
+    private void saveUserData() {
+        if (targetUserId == null) return;
+
+        EditText etName = findViewById(R.id.etName);
+        android.widget.Spinner spinnerRole = findViewById(R.id.spinnerRole);
+
+        String name = etName.getText().toString().trim();
+        String role = spinnerRole.getSelectedItem() != null ? spinnerRole.getSelectedItem().toString() : "";
+
+        if (name.isEmpty() || role.isEmpty()) {
+            Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        java.util.Map<String, Object> updates = new java.util.HashMap<>();
+        updates.put("fullname", name);
+        updates.put("cargo", role);
+        updates.put("role", role);
+
+        db.collection("user").document(targetUserId).update(updates)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Dados atualizados com sucesso!", Toast.LENGTH_SHORT).show();
+                    loadUserInfo(); // Refresh UI
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Erro ao atualizar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void setupNavbar() {
+        ImageView btnThemeToggle = findViewById(R.id.btnThemeToggle);
+        View userAvatar = findViewById(R.id.userAvatar);
+
+        // Bottom Navbar
+        View btnNavHome = findViewById(R.id.btnNavHome);
+        View btnNavRoadmap = findViewById(R.id.btnNavRoadmap);
+        View btnNavGestao = findViewById(R.id.btnNavGestao);
+        View btnNavSuporte = findViewById(R.id.btnNavSuporte);
+
+        updateThemeIcon(btnThemeToggle);
+
+        if (btnThemeToggle != null) {
+            btnThemeToggle.setOnClickListener(v -> {
+                int mode = AppCompatDelegate.getDefaultNightMode();
+                if (mode == AppCompatDelegate.MODE_NIGHT_YES) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 }
-            }
+                recreate();
+            });
+        }
 
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
+        if (userAvatar != null) {
+            userAvatar.setOnClickListener(v -> finish());
+        }
 
-        findViewById(R.id.btnAddCollaborator).setOnClickListener(v -> {
-            Toast.makeText(this, "Adicionar novo colaborador", Toast.LENGTH_SHORT).show();
-        });
+        View btnManager = findViewById(R.id.btnManagerDashboard);
+        if (btnManager != null) {
+            btnManager.setOnClickListener(v -> {
+                Intent intent = new Intent(this, ManagerDashboardActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+            });
+            btnManager.setVisibility(checkIfAdmin() ? View.VISIBLE : View.GONE);
+        }
+
+        // Bottom Navbar Listeners
+        if (btnNavHome != null) {
+            btnNavHome.setOnClickListener(v -> {
+                Intent intent = new Intent(this, DashboardActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+            });
+        }
+
+        if (btnNavRoadmap != null) {
+            btnNavRoadmap.setOnClickListener(v -> {
+                startActivity(new Intent(this, RoadmapActivity.class));
+            });
+        }
+
+        if (btnNavGestao != null) {
+            btnNavGestao.setOnClickListener(v -> {
+                startActivity(new Intent(this, UserListActivity.class));
+            });
+        }
+
+        if (btnNavSuporte != null) {
+            btnNavSuporte.setOnClickListener(v -> {
+                startActivity(new Intent(this, SupportActivity.class));
+            });
+        }
     }
 
-    private void setupRecyclerView() {
-        RecyclerView rvUsers = findViewById(R.id.rvUsers);
-        rvUsers.setLayoutManager(new LinearLayoutManager(this));
-        List<User> userList = new ArrayList<>();
-        userList.add(new User("Kauan Davi", "Analista de TI", "kauan.davi@email.com", 75, "2 anos"));
-        userList.add(new User("Larissa Lima", "Desenvolvedora Frontend", "larissa.lima@email.com", 92, "1 ano e 3 meses"));
-        userList.add(new User("Rafael Souza", "Analista de BI", "rafael.souza@email.com", 88, "6 meses"));
-        userList.add(new User("Gabriel Alves", "Designer UI/UX", "gabriel.alves@email.com", 65, "2 anos e 10 meses"));
-        userList.add(new User("Lucas Martins", "Suporte Técnico", "lucas.martins@email.com", 80, "1 ano e 1 mes"));
+    private void updateThemeIcon(ImageView btn) {
+        if (btn == null) return;
+        int mode = AppCompatDelegate.getDefaultNightMode();
+        if (mode == AppCompatDelegate.MODE_NIGHT_YES) {
+            btn.setImageResource(R.drawable.ic_sun);
+        } else {
+            btn.setImageResource(R.drawable.ic_moon);
+        }
+    }
 
-        adapter = new UserAdapter(userList);
-        rvUsers.setAdapter(adapter);
+    private boolean checkIfAdmin() {
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        return sharedPreferences.getBoolean("isAdmin", false);
     }
 }
